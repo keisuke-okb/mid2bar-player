@@ -14,7 +14,7 @@
   ],
   "video_fixed_fps": "0",
   "video_shuffle": true,
-  "enable_mic_input": true,
+  "enable_mic_input": false,
   "mic_input_channel": 0,
   "record": false,
   "settings_json_path": "app_settings/settings.json",

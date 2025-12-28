@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 project_bu.json
+project.json
 .Python
 build/
 build.cmd
