@@ -1,0 +1,235 @@
+{
+    "project_front": "images/ui/project_front.png",
+    "project_back": "images/ui/project_back.png",
+    "now_bar": "images/ui/now_bar.png",
+    "icons": {
+        "up": "images/pitch/up.png",
+        "down": "images/pitch/down.png",
+        "long": "images/pitch/long.png"
+    },
+    "range_gauge": "images/ui/range_gauge.png",
+    "bars": {
+        "0": {
+            "normal": {
+                "back_left": "images/bar/1_winered/back_left.png",
+                "back_mid": "images/bar/1_winered/back_mid.png",
+                "back_right": "images/bar/1_winered/back_right.png",
+                "fill_left": "images/bar/1_winered/fill_left.png",
+                "fill_mid": "images/bar/1_winered/fill_mid.png",
+                "fill_right": "images/bar/1_winered/fill_right.png",
+                "passed_left": "images/bar/1_winered/passed_left.png",
+                "passed_mid": "images/bar/1_winered/passed_mid.png",
+                "passed_right": "images/bar/1_winered/passed_right.png",
+                "glow": "images/bar/1_winered/glow.png"
+            },
+            "max": {
+                "back_left": "images/bar/1_winered/back_left.png",
+                "back_mid": "images/bar/1_winered/back_mid.png",
+                "back_right": "images/bar/1_winered/back_right.png",
+                "fill_left": "images/bar/1_winered/fill_left.png",
+                "fill_mid": "images/bar/1_winered/fill_mid.png",
+                "fill_right": "images/bar/1_winered/fill_right.png",
+                "passed_left": "images/bar/1_winered/passed_left.png",
+                "passed_mid": "images/bar/1_winered/passed_mid.png",
+                "passed_right": "images/bar/1_winered/passed_right.png",
+                "glow": "images/bar/1_winered/glow.png"
+            },
+            "min": {
+                "back_left": "images/bar/1_winered/back_left.png",
+                "back_mid": "images/bar/1_winered/back_mid.png",
+                "back_right": "images/bar/1_winered/back_right.png",
+                "fill_left": "images/bar/1_winered/fill_left.png",
+                "fill_mid": "images/bar/1_winered/fill_mid.png",
+                "fill_right": "images/bar/1_winered/fill_right.png",
+                "passed_left": "images/bar/1_winered/passed_left.png",
+                "passed_mid": "images/bar/1_winered/passed_mid.png",
+                "passed_right": "images/bar/1_winered/passed_right.png",
+                "glow": "images/bar/1_winered/glow.png"
+            },
+            "match": {
+                "back_left": "images/bar/1_winered/back_left.png",
+                "back_mid": "images/bar/1_winered/back_mid.png",
+                "back_right": "images/bar/1_winered/back_right.png",
+                "fill_left": "images/bar/1_winered/fill_left.png",
+                "fill_mid": "images/bar/1_winered/fill_mid.png",
+                "fill_right": "images/bar/1_winered/fill_right.png",
+                "passed_left": "images/bar/1_winered/fill_left.png",
+                "passed_mid": "images/bar/1_winered/fill_mid.png",
+                "passed_right": "images/bar/1_winered/fill_right.png",
+                "glow": "images/bar/1_winered/glow.png"
+            },
+            "match_all": {
+                "back_left": "images/bar/1_winered/back_left.png",
+                "back_mid": "images/bar/1_winered/back_mid.png",
+                "back_right": "images/bar/1_winered/back_right.png",
+                "fill_left": "images/bar/1_winered/fill_left.png",
+                "fill_mid": "images/bar/1_winered/fill_mid.png",
+                "fill_right": "images/bar/1_winered/fill_right.png",
+                "passed_left": "images/bar/1_winered/passed_left.png",
+                "passed_mid": "images/bar/1_winered/passed_mid.png",
+                "passed_right": "images/bar/1_winered/passed_right.png",
+                "glow": "images/bar/1_winered/glow.png"
+            },
+            "unmatch": {
+                "back_left": "images/bar/4_red/back_left.png",
+                "back_mid": "images/bar/4_red/back_mid.png",
+                "back_right": "images/bar/4_red/back_right.png",
+                "fill_left": "images/bar/4_red/fill_left.png",
+                "fill_mid": "images/bar/4_red/fill_mid.png",
+                "fill_right": "images/bar/4_red/fill_right.png",
+                "passed_left": "images/bar/4_red/fill_left.png",
+                "passed_mid": "images/bar/4_red/fill_mid.png",
+                "passed_right": "images/bar/4_red/fill_right.png",
+                "glow": "images/bar/4_red/glow.png"
+            }
+        },
+        "1": {
+            "normal": {
+                "back_left": "images/bar/6_blue/back_left.png",
+                "back_mid": "images/bar/6_blue/back_mid.png",
+                "back_right": "images/bar/6_blue/back_right.png",
+                "fill_left": "images/bar/6_blue/fill_left.png",
+                "fill_mid": "images/bar/6_blue/fill_mid.png",
+                "fill_right": "images/bar/6_blue/fill_right.png",
+                "passed_left": "images/bar/6_blue/passed_left.png",
+                "passed_mid": "images/bar/6_blue/passed_mid.png",
+                "passed_right": "images/bar/6_blue/passed_right.png",
+                "glow": "images/bar/6_blue/glow.png"
+            },
+            "max": {
+                "back_left": "images/bar/6_blue/back_left.png",
+                "back_mid": "images/bar/6_blue/back_mid.png",
+                "back_right": "images/bar/6_blue/back_right.png",
+                "fill_left": "images/bar/6_blue/fill_left.png",
+                "fill_mid": "images/bar/6_blue/fill_mid.png",
+                "fill_right": "images/bar/6_blue/fill_right.png",
+                "passed_left": "images/bar/6_blue/passed_left.png",
+                "passed_mid": "images/bar/6_blue/passed_mid.png",
+                "passed_right": "images/bar/6_blue/passed_right.png",
+                "glow": "images/bar/6_blue/glow.png"
+            },
+            "min": {
+                "back_left": "images/bar/6_blue/back_left.png",
+                "back_mid": "images/bar/6_blue/back_mid.png",
+                "back_right": "images/bar/6_blue/back_right.png",
+                "fill_left": "images/bar/6_blue/fill_left.png",
+                "fill_mid": "images/bar/6_blue/fill_mid.png",
+                "fill_right": "images/bar/6_blue/fill_right.png",
+                "passed_left": "images/bar/6_blue/passed_left.png",
+                "passed_mid": "images/bar/6_blue/passed_mid.png",
+                "passed_right": "images/bar/6_blue/passed_right.png",
+                "glow": "images/bar/6_blue/glow.png"
+            },
+            "match": {
+                "back_left": "images/bar/6_blue/back_left.png",
+                "back_mid": "images/bar/6_blue/back_mid.png",
+                "back_right": "images/bar/6_blue/back_right.png",
+                "fill_left": "images/bar/6_blue/fill_left.png",
+                "fill_mid": "images/bar/6_blue/fill_mid.png",
+                "fill_right": "images/bar/6_blue/fill_right.png",
+                "passed_left": "images/bar/6_blue/fill_left.png",
+                "passed_mid": "images/bar/6_blue/fill_mid.png",
+                "passed_right": "images/bar/6_blue/fill_right.png",
+                "glow": "images/bar/6_blue/glow.png"
+            },
+            "match_all": {
+                "back_left": "images/bar/6_blue/back_left.png",
+                "back_mid": "images/bar/6_blue/back_mid.png",
+                "back_right": "images/bar/6_blue/back_right.png",
+                "fill_left": "images/bar/6_blue/fill_left.png",
+                "fill_mid": "images/bar/6_blue/fill_mid.png",
+                "fill_right": "images/bar/6_blue/fill_right.png",
+                "passed_left": "images/bar/6_blue/passed_left.png",
+                "passed_mid": "images/bar/6_blue/passed_mid.png",
+                "passed_right": "images/bar/6_blue/passed_right.png",
+                "glow": "images/bar/6_blue/glow.png"
+            },
+            "unmatch": {
+                "back_left": "images/bar/4_red/back_left.png",
+                "back_mid": "images/bar/4_red/back_mid.png",
+                "back_right": "images/bar/4_red/back_right.png",
+                "fill_left": "images/bar/4_red/fill_left.png",
+                "fill_mid": "images/bar/4_red/fill_mid.png",
+                "fill_right": "images/bar/4_red/fill_right.png",
+                "passed_left": "images/bar/4_red/fill_left.png",
+                "passed_mid": "images/bar/4_red/fill_mid.png",
+                "passed_right": "images/bar/4_red/fill_right.png",
+                "glow": "images/bar/4_red/glow.png"
+            }
+        },
+        "2": {
+            "normal": {
+                "back_left": "images/bar/2_yellow/back_left.png",
+                "back_mid": "images/bar/2_yellow/back_mid.png",
+                "back_right": "images/bar/2_yellow/back_right.png",
+                "fill_left": "images/bar/2_yellow/fill_left.png",
+                "fill_mid": "images/bar/2_yellow/fill_mid.png",
+                "fill_right": "images/bar/2_yellow/fill_right.png",
+                "passed_left": "images/bar/2_yellow/passed_left.png",
+                "passed_mid": "images/bar/2_yellow/passed_mid.png",
+                "passed_right": "images/bar/2_yellow/passed_right.png",
+                "glow": "images/bar/2_yellow/glow.png"
+            },
+            "max": {
+                "back_left": "images/bar/2_yellow/back_left.png",
+                "back_mid": "images/bar/2_yellow/back_mid.png",
+                "back_right": "images/bar/2_yellow/back_right.png",
+                "fill_left": "images/bar/2_yellow/fill_left.png",
+                "fill_mid": "images/bar/2_yellow/fill_mid.png",
+                "fill_right": "images/bar/2_yellow/fill_right.png",
+                "passed_left": "images/bar/2_yellow/passed_left.png",
+                "passed_mid": "images/bar/2_yellow/passed_mid.png",
+                "passed_right": "images/bar/2_yellow/passed_right.png",
+                "glow": "images/bar/2_yellow/glow.png"
+            },
+            "min": {
+                "back_left": "images/bar/2_yellow/back_left.png",
+                "back_mid": "images/bar/2_yellow/back_mid.png",
+                "back_right": "images/bar/2_yellow/back_right.png",
+                "fill_left": "images/bar/2_yellow/fill_left.png",
+                "fill_mid": "images/bar/2_yellow/fill_mid.png",
+                "fill_right": "images/bar/2_yellow/fill_right.png",
+                "passed_left": "images/bar/2_yellow/passed_left.png",
+                "passed_mid": "images/bar/2_yellow/passed_mid.png",
+                "passed_right": "images/bar/2_yellow/passed_right.png",
+                "glow": "images/bar/2_yellow/glow.png"
+            },
+            "match": {
+                "back_left": "images/bar/2_yellow/back_left.png",
+                "back_mid": "images/bar/2_yellow/back_mid.png",
+                "back_right": "images/bar/2_yellow/back_right.png",
+                "fill_left": "images/bar/2_yellow/fill_left.png",
+                "fill_mid": "images/bar/2_yellow/fill_mid.png",
+                "fill_right": "images/bar/2_yellow/fill_right.png",
+                "passed_left": "images/bar/2_yellow/fill_left.png",
+                "passed_mid": "images/bar/2_yellow/fill_mid.png",
+                "passed_right": "images/bar/2_yellow/fill_right.png",
+                "glow": "images/bar/2_yellow/glow.png"
+            },
+            "match_all": {
+                "back_left": "images/bar/2_yellow/back_left.png",
+                "back_mid": "images/bar/2_yellow/back_mid.png",
+                "back_right": "images/bar/2_yellow/back_right.png",
+                "fill_left": "images/bar/2_yellow/fill_left.png",
+                "fill_mid": "images/bar/2_yellow/fill_mid.png",
+                "fill_right": "images/bar/2_yellow/fill_right.png",
+                "passed_left": "images/bar/2_yellow/passed_left.png",
+                "passed_mid": "images/bar/2_yellow/passed_mid.png",
+                "passed_right": "images/bar/2_yellow/passed_right.png",
+                "glow": "images/bar/2_yellow/glow.png"
+            },
+            "unmatch": {
+                "back_left": "images/bar/4_red/back_left.png",
+                "back_mid": "images/bar/4_red/back_mid.png",
+                "back_right": "images/bar/4_red/back_right.png",
+                "fill_left": "images/bar/4_red/fill_left.png",
+                "fill_mid": "images/bar/4_red/fill_mid.png",
+                "fill_right": "images/bar/4_red/fill_right.png",
+                "passed_left": "images/bar/4_red/fill_left.png",
+                "passed_mid": "images/bar/4_red/fill_mid.png",
+                "passed_right": "images/bar/4_red/fill_right.png",
+                "glow": "images/bar/4_red/glow.png"
+            }
+        }
+    }
+}
