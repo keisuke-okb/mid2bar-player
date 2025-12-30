@@ -13,7 +13,7 @@
 
 </div>
 
-A standalone karaoke player that generates karaoke subtitle videos using ruby-annotated LRC lyric files, melody MIDI data, and background videos.
+A standalone karaoke player that generates karaoke subtitle videos with pitch guide bar using ruby-annotated LRC lyric files, melody MIDI data, and background videos. 
 
 ## 概要
 
@@ -23,12 +23,12 @@ A standalone karaoke player that generates karaoke subtitle videos using ruby-an
 
 ### 動作環境
 
-- OS: Windows 11
-- ディスプレイ：Full HD(1920x1080)以上の解像度
+- OS: Windows / masOS* / Linux*
+  - 音程バーのページ切り替えアニメーション時に画面がチカチカする場合、`app_settings/settings.json`>`FADE_TIME`を`0.0`に設定してください。
 - 外部ソフトウェア：ffmpeg (画面の録画機能を使用する場合。ffmpeg.exe, ffprove.exeがあるフォルダを環境変数に登録するか、当アプリケーションのあるフォルダ直下に配置してください。)
 
 
-## サンプルプロジェクトを使ったチュートリアル（ビルド済みパッケージ）
+## サンプルプロジェクトを使ったチュートリアル（Windows向けビルド済みパッケージの例）
 
 1. `MID2BAR-Player.exe` を起動します。
 2. 「ファイル＞プロジェクトを開く」メニューから、「sample/sample_project.json」を読み込むと以下の設定がサンプルの音楽に設定されます。
