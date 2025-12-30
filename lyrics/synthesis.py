@@ -71,54 +71,67 @@ def apply_color_mask_and_overlay(img_a, img_b, target_color, tolerance=0.1):
 
 def test():
     # 使用例
-    image_a_path = 'path_to_image_a.png'  # 透過PNG画像Aのパス
-    image_b_path = 'path_to_image_b.png'  # 置き換え用PNG画像Bのパス
+    image_a_path = "path_to_image_a.png"  # 透過PNG画像Aのパス
+    image_b_path = "path_to_image_b.png"  # 置き換え用PNG画像Bのパス
     target_color = (255, 0, 0)  # 置き換え対象の色 (RGB)
     tolerance = 0.1  # 色の許容範囲 (0～1)
 
     # 新しい画像Cを作成
-    new_image = apply_color_mask_and_overlay(image_a_path, image_b_path, target_color, tolerance)
+    new_image = apply_color_mask_and_overlay(
+        image_a_path, image_b_path, target_color, tolerance
+    )
 
     # 結果を保存
-    new_image.save('output_image.png')
+    new_image.save("output_image.png")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='LRC2EXO-Python Synthesis')
-    parser.add_argument('--input_dir', type=str, required=True, help='歌詞画像のパス')
-    parser.add_argument('--output_dir', type=str, default='output_synthesis', help='出力ディレクトリのパス')
-    parser.add_argument('--before', action="store_true")
-    parser.add_argument('--after', action="store_true")
+    parser = argparse.ArgumentParser(description="LRC2EXO-Python Synthesis")
+    parser.add_argument("--input_dir", type=str, required=True, help="歌詞画像のパス")
+    parser.add_argument(
+        "--output_dir", type=str, default="output_synthesis", help="出力ディレクトリのパス"
+    )
+    parser.add_argument("--before", action="store_true")
+    parser.add_argument("--after", action="store_true")
 
     target_colors_before = [[255, 0, 0], [0, 255, 0]]
     target_colors_after = [[255, 0, 0], [0, 255, 0]]
-    overlay_image_paths_before = ["./images/fill_before_himari_mitsuki.png", "./images/fill_before_himari_mitsuki_tsumugi.png"]
-    overlay_image_paths_after = ["./images/fill_after_himari_mitsuki.png", "./images/fill_after_himari_mitsuki_tsumugi.png"]
+    overlay_image_paths_before = [
+        "./images/fill_before_himari_mitsuki.png",
+        "./images/fill_before_himari_mitsuki_tsumugi.png",
+    ]
+    overlay_image_paths_after = [
+        "./images/fill_after_himari_mitsuki.png",
+        "./images/fill_after_himari_mitsuki_tsumugi.png",
+    ]
     tolerance = 0.6  # 色の許容範囲 (0～1)
 
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
-    
+
     images = [f for f in os.listdir(args.input_dir) if f.endswith(".png")]
     for image in tqdm(images):
         src_image_path = os.path.join(args.input_dir, image)
         dst_image_path = os.path.join(args.output_dir, image)
 
         img_a = Image.open(src_image_path).convert("RGBA")
-        
+
         # 新しい画像Cを作成
         if image.endswith("_1.png") and args.before:
             img_a = Image.open(src_image_path).convert("RGBA")
             for i in range(len(target_colors_before)):
                 img_b = Image.open(overlay_image_paths_before[i]).convert("RGBA")
-                img_a = apply_color_mask_and_overlay(img_a, img_b, target_colors_before[i], tolerance)
+                img_a = apply_color_mask_and_overlay(
+                    img_a, img_b, target_colors_before[i], tolerance
+                )
 
         elif args.after:
             img_a = Image.open(src_image_path).convert("RGBA")
             for i in range(len(target_colors_after)):
                 img_b = Image.open(overlay_image_paths_after[i]).convert("RGBA")
-                img_a = apply_color_mask_and_overlay(img_a, img_b, target_colors_after[i], tolerance)
+                img_a = apply_color_mask_and_overlay(
+                    img_a, img_b, target_colors_after[i], tolerance
+                )
 
         # 結果を保存
         img_a.save(dst_image_path)
-

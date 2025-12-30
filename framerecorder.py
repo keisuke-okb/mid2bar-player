@@ -5,6 +5,7 @@ import os
 from datetime import datetime
 from tkinter import messagebox
 
+
 class PipeFrameRecorder:
     def __init__(self):
         self.proc = None
@@ -152,4 +153,3 @@ class PipeFrameRecorder:
                 self.proc = None
                 self.is_recording = False
                 messagebox.showinfo("info", f"Recording finished:\n{self.out_path}")
-

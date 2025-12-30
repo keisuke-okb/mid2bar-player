@@ -110,7 +110,9 @@ class Mid2barPlayerApp:
                     lyric_data[lyric_type]["image"]
                 ).convert_alpha()
             # Progress
-            self._flash_message(f"{get_lang_text_app('loading subtitles')}...（{i+1}/{len(self.lyrics)}）")
+            self._flash_message(
+                f"{get_lang_text_app('loading subtitles')}...（{i+1}/{len(self.lyrics)}）"
+            )
 
         # Basic variables
         self.audio_path = audio_path
@@ -239,7 +241,9 @@ class Mid2barPlayerApp:
 
         # Mic input
         if self.enable_mic_input:
-            self.detector = RealtimeFFTPitchDetector(settings_json_path=self.setting_json_path)
+            self.detector = RealtimeFFTPitchDetector(
+                settings_json_path=self.setting_json_path
+            )
             self.detector.start()
 
     # ---------- I/O / Initialize ----------
@@ -1255,7 +1259,9 @@ class Mid2barPlayerApp:
             texts = self.credit_text.split("\n")
             pos = list(self.screen.get_rect().bottomright)
             pos[0] += self.s.SPLASH_TEXT_X_OFFSET
-            pos[1] += self.s.SPLASH_TEXT_Y_OFFSET - (self.s.SPLASH_TEXT_LINE_HEIGHT * (len(texts) - 1))
+            pos[1] += self.s.SPLASH_TEXT_Y_OFFSET - (
+                self.s.SPLASH_TEXT_LINE_HEIGHT * (len(texts) - 1)
+            )
             for text in texts:
                 text_surf = tools.render_outlined_text(
                     text,
@@ -1358,9 +1364,9 @@ class Mid2barPlayerApp:
     # ---------- Drawing flow ----------
     def draw_ready(self):
         if self.recorder is None:
-            mes = get_lang_text_app('press space to play')
+            mes = get_lang_text_app("press space to play")
         else:
-            mes = get_lang_text_app('press space to start recording')
+            mes = get_lang_text_app("press space to start recording")
         self._flash_message(mes)
 
     def draw_background(self):
@@ -1520,7 +1526,11 @@ class Mid2barPlayerApp:
 
     def draw_seekbar(self):
         if self.enable_mic_input:
-            scores = [s for s in self.page_scores if s["end_time"] < self.current_time and s["number_of_notes"] > 0]
+            scores = [
+                s
+                for s in self.page_scores
+                if s["end_time"] < self.current_time and s["number_of_notes"] > 0
+            ]
             score = (
                 np.array([s["weighted_score"] for s in scores]).mean()
                 if len(scores) > 0
@@ -1536,9 +1546,7 @@ class Mid2barPlayerApp:
             ]
             now_score = now_scores[-1]["weighted_score"] if len(now_scores) > 0 else 0.0
 
-            score_str = (
-                f" {get_lang_text_app('total')}: {score:3.3f}, {get_lang_text_app('page')}: {page_score:3.3f}, {get_lang_text_app('now')}: {now_score:3.3f}"
-            )
+            score_str = f" {get_lang_text_app('total')}: {score:3.3f}, {get_lang_text_app('page')}: {page_score:3.3f}, {get_lang_text_app('now')}: {now_score:3.3f}"
         else:
             score_str = ""
 
@@ -1715,7 +1723,9 @@ class Mid2barPlayerApp:
                         self.enable_mic_input = not self.enable_mic_input
                         if self.enable_mic_input:
                             self.bar_auto_play = False
-                            self.detector = RealtimeFFTPitchDetector(settings_json_path=self.setting_json_path)
+                            self.detector = RealtimeFFTPitchDetector(
+                                settings_json_path=self.setting_json_path
+                            )
                             self.detector.start()
 
                     elif event.key == pygame.K_F11:

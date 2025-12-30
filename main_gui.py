@@ -256,12 +256,18 @@ class ProjectEditorApp(ctk.CTk):
             variable=self.enable_mic_input_var,
         ).grid(row=0, column=1, sticky="w", padx=4)
         ctk.CTkCheckBox(
-            chk_frame, font=self.font, text=get_lang_text("record"), variable=self.record_var
+            chk_frame,
+            font=self.font,
+            text=get_lang_text("record"),
+            variable=self.record_var,
         ).grid(row=0, column=2, sticky="w", padx=4)
 
         # Start button
         start_btn = ctk.CTkButton(
-            left, font=self.font, text=get_lang_text("run"), command=self.start_with_settings
+            left,
+            font=self.font,
+            text=get_lang_text("run"),
+            command=self.start_with_settings,
         )
         start_btn.grid(row=14, column=0, pady=12, padx=8, sticky="ew")
 
@@ -294,11 +300,17 @@ class ProjectEditorApp(ctk.CTk):
         btn_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
 
         add_btn = ctk.CTkButton(
-            btn_frame, font=self.font, text=get_lang_text("add..."), command=self.video_add
+            btn_frame,
+            font=self.font,
+            text=get_lang_text("add..."),
+            command=self.video_add,
         )
         add_btn.grid(row=0, column=0, padx=4, pady=4, sticky="ew")
         remove_btn = ctk.CTkButton(
-            btn_frame, font=self.font, text=get_lang_text("delete_selected"), command=self.video_remove
+            btn_frame,
+            font=self.font,
+            text=get_lang_text("delete_selected"),
+            command=self.video_remove,
         )
         remove_btn.grid(row=0, column=1, padx=4, pady=4, sticky="ew")
         up_btn = ctk.CTkButton(
@@ -322,7 +334,10 @@ class ProjectEditorApp(ctk.CTk):
         extra_frame = ctk.CTkFrame(right)
         extra_frame.grid(row=3, column=0, padx=8, pady=(0, 8), sticky="ew")
         add_multi_btn = ctk.CTkButton(
-            extra_frame, font=self.font, text=get_lang_text("add_multi..."), command=self.video_add_multi
+            extra_frame,
+            font=self.font,
+            text=get_lang_text("add_multi..."),
+            command=self.video_add_multi,
         )
         add_multi_btn.grid(row=0, column=0, padx=4, pady=4, sticky="ew")
         add_dir_btn = ctk.CTkButton(
@@ -559,7 +574,7 @@ class ProjectEditorApp(ctk.CTk):
             if not shutil.which("ffmpeg"):
                 messagebox.showerror("Error", get_lang_text("ffmpeg_error"))
                 return
-            
+
         # Check MIDI
         mid_path = proj.get("mid_path")
         separator_csv = f"./data/marker.csv"

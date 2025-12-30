@@ -8,7 +8,7 @@ def get_width_count(text):
     """全角文字を考慮して、文字列の表示幅を計算します。"""
     count = 0
     for c in text:
-        if unicodedata.east_asian_width(c) in 'FWA':
+        if unicodedata.east_asian_width(c) in "FWA":
             count += 2
         else:
             count += 1
@@ -48,14 +48,16 @@ def get_width_from_text(text, settings, mode="lyric", is_chorus=False):
             text_with_min = settings.RUBY.TEXT_WIDTH_MIN
             margin_space = settings.RUBY.MARGIN_SPACE
 
-    image = Image.new('RGBA', (font_size + 100, font_size + 100), (255, 255, 255, 0))
+    image = Image.new("RGBA", (font_size + 100, font_size + 100), (255, 255, 255, 0))
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(font_path, font_size)
     draw.text((0, 0), text, font=font, fill=(255, 0, 0, 255))
     bbox = list(draw.textbbox((0, 0), text, font=font))
 
     image_np = np.array(image)
-    red_pixels = np.where((image_np[:, :, 0] == 255) & (image_np[:, :, 1] == 0) & (image_np[:, :, 2] == 0))
+    red_pixels = np.where(
+        (image_np[:, :, 0] == 255) & (image_np[:, :, 1] == 0) & (image_np[:, :, 2] == 0)
+    )
     if red_pixels[1].size > 0:
         leftmost_x = np.min(red_pixels[1])
         rightmost_x = np.max(red_pixels[1])
@@ -68,7 +70,7 @@ def get_width_from_text(text, settings, mode="lyric", is_chorus=False):
     margin = margin_full if get_width_count(text) > 1 else margin_half
     if not text != "" and _width < text_with_min:
         _width = text_with_min
-    
+
     if text == " ":
         _width = 0
         margin = margin_space
@@ -77,7 +79,9 @@ def get_width_from_text(text, settings, mode="lyric", is_chorus=False):
     return {"bbox": bbox, "margin": margin, "width": _width}
 
 
-def draw_text_with_bbox(text_units, settings, mode="lyric", is_chorus=False, output_path=None):
+def draw_text_with_bbox(
+    text_units, settings, mode="lyric", is_chorus=False, output_path=None
+):
     """文字列をバウンディングボックス付きで描画し、描画後の最終的なx座標を返します。"""
     if mode == "lyric":
         if is_chorus:
@@ -100,7 +104,9 @@ def draw_text_with_bbox(text_units, settings, mode="lyric", is_chorus=False, out
 
     # Create an image with transparency (RGBA)
     x_base = stroke_size
-    image = Image.new('RGBA', (settings.GENERAL.WIDTH, settings.GENERAL.HEIGHT), (255, 255, 255, 0))
+    image = Image.new(
+        "RGBA", (settings.GENERAL.WIDTH, settings.GENERAL.HEIGHT), (255, 255, 255, 0)
+    )
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype(font_path, font_size)
     _x_starts = []
@@ -111,20 +117,30 @@ def draw_text_with_bbox(text_units, settings, mode="lyric", is_chorus=False, out
         _margin = 0
 
         for t in text:
-            _data = get_width_from_text(t, settings=settings, mode=mode, is_chorus=is_chorus)
+            _data = get_width_from_text(
+                t, settings=settings, mode=mode, is_chorus=is_chorus
+            )
             _bbox = _data["bbox"]
             _width = _data["width"]
             _margin = _data["margin"]
-            draw.text((x_base - _bbox[0], 100), t, font=font, fill=(255, 255, 255, 255), stroke_width=stroke_size, stroke_fill=(0, 0, 0, 230))
+            draw.text(
+                (x_base - _bbox[0], 100),
+                t,
+                font=font,
+                fill=(255, 255, 255, 255),
+                stroke_width=stroke_size,
+                stroke_fill=(0, 0, 0, 230),
+            )
             x_base += _width + _margin
-        
+
         _x_ends.append(x_base - _margin)
 
     # Save the image
     if output_path is not None:
-        image.save(output_path, 'PNG')
-    
+        image.save(output_path, "PNG")
+
     return x_base + stroke_size, _x_starts, _x_ends
+
 
 COLOR_FILL_BEFORE_MAIN = None
 COLOR_STROKE_FILL_BEFORE_MAIN = None
@@ -136,7 +152,13 @@ COLOR_FILL_AFTER_CURRENT = None
 COLOR_STROKE_FILL_AFTER_CURRENT = None
 IS_CHORUS = False
 
-def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.png", output_path_2="images/output_2.png"):
+
+def draw_lyric_image_with_ruby(
+    data,
+    settings,
+    output_path_1="images/output_1.png",
+    output_path_2="images/output_2.png",
+):
     """歌詞とルビを含む画像を生成し、2つの画像を保存して分析データを返します。"""
     global COLOR_FILL_BEFORE_MAIN, COLOR_STROKE_FILL_BEFORE_MAIN, COLOR_FILL_AFTER_MAIN, COLOR_STROKE_FILL_AFTER_MAIN
     global COLOR_FILL_BEFORE_CURRENT, COLOR_STROKE_FILL_BEFORE_CURRENT, COLOR_FILL_AFTER_CURRENT, COLOR_STROKE_FILL_AFTER_CURRENT
@@ -155,10 +177,14 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
         COLOR_STROKE_FILL_AFTER_CURRENT = settings.GENERAL.COLOR_STROKE_FILL_AFTER
 
     # Before wipe
-    image_1 = Image.new('RGBA', (settings.GENERAL.WIDTH, settings.GENERAL.HEIGHT), (255, 255, 255, 0))
+    image_1 = Image.new(
+        "RGBA", (settings.GENERAL.WIDTH, settings.GENERAL.HEIGHT), (255, 255, 255, 0)
+    )
     draw_1 = ImageDraw.Draw(image_1)
     # After wipe
-    image_2 = Image.new('RGBA', (settings.GENERAL.WIDTH, settings.GENERAL.HEIGHT), (255, 255, 255, 0))
+    image_2 = Image.new(
+        "RGBA", (settings.GENERAL.WIDTH, settings.GENERAL.HEIGHT), (255, 255, 255, 0)
+    )
     draw_2 = ImageDraw.Draw(image_2)
 
     if IS_CHORUS:
@@ -168,8 +194,12 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
         lyric_cat = "LYRIC"
         ruby_cat = "RUBY"
 
-    font_lyric = ImageFont.truetype(getattr(settings, lyric_cat).FONT_PATH, getattr(settings, lyric_cat).FONT_SIZE)
-    font_ruby = ImageFont.truetype(getattr(settings, ruby_cat).FONT_PATH, getattr(settings, ruby_cat).FONT_SIZE)
+    font_lyric = ImageFont.truetype(
+        getattr(settings, lyric_cat).FONT_PATH, getattr(settings, lyric_cat).FONT_SIZE
+    )
+    font_ruby = ImageFont.truetype(
+        getattr(settings, ruby_cat).FONT_PATH, getattr(settings, ruby_cat).FONT_SIZE
+    )
 
     x_base = settings.GENERAL.X_BASE_INIT
     x_start_lyric = []
@@ -178,24 +208,36 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
     x_end_ruby = []
 
     for i, (lyric_units, ruby_units) in enumerate(zip(data["lyrics"], data["rubys"])):
-        lyric = ''.join(lyric_units)
-        ruby = ''.join(ruby_units)
+        lyric = "".join(lyric_units)
+        ruby = "".join(ruby_units)
 
-        _width_lyric, _, _ = draw_text_with_bbox(lyric_units, settings=settings, mode="lyric", is_chorus=IS_CHORUS)
-        _width_ruby, _xs_start_ruby, _xs_end_ruby = draw_text_with_bbox(ruby_units, settings=settings, mode="ruby", is_chorus=IS_CHORUS)
+        _width_lyric, _, _ = draw_text_with_bbox(
+            lyric_units, settings=settings, mode="lyric", is_chorus=IS_CHORUS
+        )
+        _width_ruby, _xs_start_ruby, _xs_end_ruby = draw_text_with_bbox(
+            ruby_units, settings=settings, mode="ruby", is_chorus=IS_CHORUS
+        )
 
         if lyric == " " and ruby == "":
             x_start_lyric.append([x_end_lyric[-1][-1]])
             x_start_ruby.append([x_end_ruby[-1][-1]])
             x_base += getattr(settings, lyric_cat).MARGIN_SPACE
-            x_end_lyric.append([int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)])
+            x_end_lyric.append(
+                [int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)]
+            )
             x_end_ruby.append([int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)])
             continue
 
         elif lyric == "":
-            x_start_lyric.append([int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)])
-            x_start_ruby.append([int(x_base - getattr(settings, ruby_cat).STROKE_WIDTH)])
-            x_end_lyric.append([int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)])
+            x_start_lyric.append(
+                [int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)]
+            )
+            x_start_ruby.append(
+                [int(x_base - getattr(settings, ruby_cat).STROKE_WIDTH)]
+            )
+            x_end_lyric.append(
+                [int(x_base - getattr(settings, lyric_cat).STROKE_WIDTH)]
+            )
             x_end_ruby.append([int(x_base - getattr(settings, ruby_cat).STROKE_WIDTH)])
             continue
 
@@ -211,13 +253,31 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
             idx = settings.GENERAL.CHANGE_TO_PART_STR.index(lyric)
             paste_image = Image.open(settings.GENERAL.PART_ICON[idx]).convert("RGBA")
             original_width, original_height = paste_image.size
-            new_width = int((settings.GENERAL.PART_ICON_HEIGHT / original_height) * original_width)
-            resized_image = paste_image.resize((new_width, settings.GENERAL.PART_ICON_HEIGHT), Image.ANTIALIAS)
+            new_width = int(
+                (settings.GENERAL.PART_ICON_HEIGHT / original_height) * original_width
+            )
+            resized_image = paste_image.resize(
+                (new_width, settings.GENERAL.PART_ICON_HEIGHT), Image.ANTIALIAS
+            )
 
             _x_lyric = _x_lyric - settings.GENERAL.PART_ICON_MARGIN_X
 
-            image_1.paste(resized_image, (_x_lyric + settings.GENERAL.PART_ICON_OFFSET_X, settings.GENERAL.Y_LYRIC + settings.GENERAL.PART_ICON_OFFSET_Y), resized_image)
-            image_2.paste(resized_image, (_x_lyric + settings.GENERAL.PART_ICON_OFFSET_X, settings.GENERAL.Y_LYRIC + settings.GENERAL.PART_ICON_OFFSET_Y), resized_image)
+            image_1.paste(
+                resized_image,
+                (
+                    _x_lyric + settings.GENERAL.PART_ICON_OFFSET_X,
+                    settings.GENERAL.Y_LYRIC + settings.GENERAL.PART_ICON_OFFSET_Y,
+                ),
+                resized_image,
+            )
+            image_2.paste(
+                resized_image,
+                (
+                    _x_lyric + settings.GENERAL.PART_ICON_OFFSET_X,
+                    settings.GENERAL.Y_LYRIC + settings.GENERAL.PART_ICON_OFFSET_Y,
+                ),
+                resized_image,
+            )
 
             x_start_lyric.append([int(_x_lyric)])
             x_start_ruby.append([int(_x_lyric)])
@@ -226,38 +286,82 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
             x_end_ruby.append([int(_x_lyric + new_width)])
 
             # change color
-            COLOR_FILL_BEFORE_CURRENT = tuple(settings.GENERAL.COLOR_FILL_BEFORE_PART[idx])
-            COLOR_STROKE_FILL_BEFORE_CURRENT = tuple(settings.GENERAL.COLOR_STROKE_FILL_BEFORE_PART[idx])
-            COLOR_FILL_AFTER_CURRENT = tuple(settings.GENERAL.COLOR_FILL_AFTER_PART[idx])
-            COLOR_STROKE_FILL_AFTER_CURRENT = tuple(settings.GENERAL.COLOR_STROKE_FILL_AFTER_PART[idx])
+            COLOR_FILL_BEFORE_CURRENT = tuple(
+                settings.GENERAL.COLOR_FILL_BEFORE_PART[idx]
+            )
+            COLOR_STROKE_FILL_BEFORE_CURRENT = tuple(
+                settings.GENERAL.COLOR_STROKE_FILL_BEFORE_PART[idx]
+            )
+            COLOR_FILL_AFTER_CURRENT = tuple(
+                settings.GENERAL.COLOR_FILL_AFTER_PART[idx]
+            )
+            COLOR_STROKE_FILL_AFTER_CURRENT = tuple(
+                settings.GENERAL.COLOR_STROKE_FILL_AFTER_PART[idx]
+            )
             continue
 
         # draw lyric
-        x_start_lyric.append([int(_x_lyric - getattr(settings, lyric_cat).STROKE_WIDTH)])
+        x_start_lyric.append(
+            [int(_x_lyric - getattr(settings, lyric_cat).STROKE_WIDTH)]
+        )
         _margin = 0
 
         for t in lyric:
             # Change color
             if t in settings.GENERAL.CHANGE_TO_CHORUS_STR:
                 COLOR_FILL_BEFORE_CURRENT = settings.GENERAL.COLOR_FILL_BEFORE_CHORUS
-                COLOR_STROKE_FILL_BEFORE_CURRENT = settings.GENERAL.COLOR_STROKE_FILL_BEFORE_CHORUS
+                COLOR_STROKE_FILL_BEFORE_CURRENT = (
+                    settings.GENERAL.COLOR_STROKE_FILL_BEFORE_CHORUS
+                )
                 COLOR_FILL_AFTER_CURRENT = settings.GENERAL.COLOR_FILL_AFTER_CHORUS
-                COLOR_STROKE_FILL_AFTER_CURRENT = settings.GENERAL.COLOR_STROKE_FILL_AFTER_CHORUS
+                COLOR_STROKE_FILL_AFTER_CURRENT = (
+                    settings.GENERAL.COLOR_STROKE_FILL_AFTER_CHORUS
+                )
                 IS_CHORUS = True
-                font_lyric = ImageFont.truetype(settings.LYRIC_CHORUS.FONT_PATH, settings.LYRIC_CHORUS.FONT_SIZE)
-                font_ruby = ImageFont.truetype(settings.RUBY_CHORUS.FONT_PATH, settings.RUBY_CHORUS.FONT_SIZE)
+                font_lyric = ImageFont.truetype(
+                    settings.LYRIC_CHORUS.FONT_PATH, settings.LYRIC_CHORUS.FONT_SIZE
+                )
+                font_ruby = ImageFont.truetype(
+                    settings.RUBY_CHORUS.FONT_PATH, settings.RUBY_CHORUS.FONT_SIZE
+                )
                 lyric_cat = "LYRIC_CHORUS"
                 ruby_cat = "RUBY_CHORUS"
 
-            _data = get_width_from_text(t, settings=settings, mode="lyric", is_chorus=IS_CHORUS)
+            _data = get_width_from_text(
+                t, settings=settings, mode="lyric", is_chorus=IS_CHORUS
+            )
             _bbox = _data["bbox"]
             _width = _data["width"]
             _margin = _data["margin"]
-            draw_1.text((_x_lyric - _bbox[0], settings.GENERAL.Y_LYRIC + getattr(settings, lyric_cat).Y_DRAW_OFFSET), t, font=font_lyric, fill=COLOR_FILL_BEFORE_CURRENT, stroke_width=getattr(settings, lyric_cat).STROKE_WIDTH, stroke_fill=COLOR_STROKE_FILL_BEFORE_CURRENT)
-            draw_2.text((_x_lyric - _bbox[0], settings.GENERAL.Y_LYRIC + getattr(settings, lyric_cat).Y_DRAW_OFFSET), t, font=font_lyric, fill=COLOR_FILL_AFTER_CURRENT, stroke_width=getattr(settings, lyric_cat).STROKE_WIDTH, stroke_fill=COLOR_STROKE_FILL_AFTER_CURRENT)
+            draw_1.text(
+                (
+                    _x_lyric - _bbox[0],
+                    settings.GENERAL.Y_LYRIC
+                    + getattr(settings, lyric_cat).Y_DRAW_OFFSET,
+                ),
+                t,
+                font=font_lyric,
+                fill=COLOR_FILL_BEFORE_CURRENT,
+                stroke_width=getattr(settings, lyric_cat).STROKE_WIDTH,
+                stroke_fill=COLOR_STROKE_FILL_BEFORE_CURRENT,
+            )
+            draw_2.text(
+                (
+                    _x_lyric - _bbox[0],
+                    settings.GENERAL.Y_LYRIC
+                    + getattr(settings, lyric_cat).Y_DRAW_OFFSET,
+                ),
+                t,
+                font=font_lyric,
+                fill=COLOR_FILL_AFTER_CURRENT,
+                stroke_width=getattr(settings, lyric_cat).STROKE_WIDTH,
+                stroke_fill=COLOR_STROKE_FILL_AFTER_CURRENT,
+            )
             _x_lyric += _width + _margin
-        
-        x_end_lyric.append([int(_x_lyric - _margin + getattr(settings, lyric_cat).STROKE_WIDTH)])
+
+        x_end_lyric.append(
+            [int(_x_lyric - _margin + getattr(settings, lyric_cat).STROKE_WIDTH)]
+        )
 
         # draw ruby
         _x_start = int(_x_ruby - getattr(settings, ruby_cat).STROKE_WIDTH)
@@ -265,12 +369,34 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
         x_start_ruby.append([int(_x + _x_start_offset) for _x in _xs_start_ruby])
         _margin = 0
         for t in ruby:
-            _data = get_width_from_text(t, settings=settings, mode="ruby", is_chorus=IS_CHORUS)
+            _data = get_width_from_text(
+                t, settings=settings, mode="ruby", is_chorus=IS_CHORUS
+            )
             _bbox = _data["bbox"]
             _width = _data["width"]
             _margin = _data["margin"]
-            draw_1.text((_x_ruby - _bbox[0], settings.GENERAL.Y_RUBY + getattr(settings, ruby_cat).Y_DRAW_OFFSET), t, font=font_ruby, fill=COLOR_FILL_BEFORE_CURRENT, stroke_width=getattr(settings, ruby_cat).STROKE_WIDTH, stroke_fill=COLOR_STROKE_FILL_BEFORE_CURRENT)
-            draw_2.text((_x_ruby - _bbox[0], settings.GENERAL.Y_RUBY + getattr(settings, ruby_cat).Y_DRAW_OFFSET), t, font=font_ruby, fill=COLOR_FILL_AFTER_CURRENT, stroke_width=getattr(settings, ruby_cat).STROKE_WIDTH, stroke_fill=COLOR_STROKE_FILL_AFTER_CURRENT)
+            draw_1.text(
+                (
+                    _x_ruby - _bbox[0],
+                    settings.GENERAL.Y_RUBY + getattr(settings, ruby_cat).Y_DRAW_OFFSET,
+                ),
+                t,
+                font=font_ruby,
+                fill=COLOR_FILL_BEFORE_CURRENT,
+                stroke_width=getattr(settings, ruby_cat).STROKE_WIDTH,
+                stroke_fill=COLOR_STROKE_FILL_BEFORE_CURRENT,
+            )
+            draw_2.text(
+                (
+                    _x_ruby - _bbox[0],
+                    settings.GENERAL.Y_RUBY + getattr(settings, ruby_cat).Y_DRAW_OFFSET,
+                ),
+                t,
+                font=font_ruby,
+                fill=COLOR_FILL_AFTER_CURRENT,
+                stroke_width=getattr(settings, ruby_cat).STROKE_WIDTH,
+                stroke_fill=COLOR_STROKE_FILL_AFTER_CURRENT,
+            )
             _x_ruby += _width + _margin
 
         _x_end = int(_x_ruby - _margin + getattr(settings, ruby_cat).STROKE_WIDTH)
@@ -279,7 +405,7 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
 
         if _width_lyric >= _width_ruby:
             x_base = _x_lyric
-        
+
         else:
             x_base = _x_ruby
 
@@ -289,8 +415,12 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
             COLOR_FILL_AFTER_CURRENT = COLOR_FILL_AFTER_MAIN
             COLOR_STROKE_FILL_AFTER_CURRENT = COLOR_STROKE_FILL_AFTER_MAIN
             IS_CHORUS = False
-            font_lyric = ImageFont.truetype(settings.LYRIC.FONT_PATH, settings.LYRIC.FONT_SIZE)
-            font_ruby = ImageFont.truetype(settings.RUBY.FONT_PATH, settings.RUBY.FONT_SIZE)
+            font_lyric = ImageFont.truetype(
+                settings.LYRIC.FONT_PATH, settings.LYRIC.FONT_SIZE
+            )
+            font_ruby = ImageFont.truetype(
+                settings.RUBY.FONT_PATH, settings.RUBY.FONT_SIZE
+            )
             lyric_cat = "LYRIC"
             ruby_cat = "RUBY"
 
@@ -309,14 +439,17 @@ def draw_lyric_image_with_ruby(data, settings, output_path_1="images/output_1.pn
         # arr_2[mask, 3] = 255
         # image_2 = Image.fromarray(arr_2, mode="RGBA")
 
-    image_1.save(output_path_1, 'PNG')
-    image_2.save(output_path_2, 'PNG')
+    image_1.save(output_path_1, "PNG")
+    image_2.save(output_path_2, "PNG")
     data["x_start_lyric"] = x_start_lyric
     data["x_end_lyric"] = x_end_lyric
     data["x_start_ruby"] = x_start_ruby
     data["x_end_ruby"] = x_end_ruby
-    data["x_length"] = x_end_lyric[-1][-1] + settings.GENERAL.X_BASE_INIT if x_end_lyric[-1][-1] > x_end_ruby[-1][-1] else x_end_ruby[-1][-1] + settings.GENERAL.X_BASE_INIT
+    data["x_length"] = (
+        x_end_lyric[-1][-1] + settings.GENERAL.X_BASE_INIT
+        if x_end_lyric[-1][-1] > x_end_ruby[-1][-1]
+        else x_end_ruby[-1][-1] + settings.GENERAL.X_BASE_INIT
+    )
     data["image_1"] = os.path.abspath(output_path_1)
     data["image_2"] = os.path.abspath(output_path_2)
     return data
-

@@ -8,7 +8,13 @@ import settings_loader
 
 
 class VideoPlayer:
-    def __init__(self, video_paths, fixed_fps=0, shuffle=False, settings_json_path="settings.json"):
+    def __init__(
+        self,
+        video_paths,
+        fixed_fps=0,
+        shuffle=False,
+        settings_json_path="settings.json",
+    ):
         self.s = settings_loader.load(settings_json_path)
         self.video_paths = list(video_paths or [])
         self.current_video_index = 0
@@ -58,7 +64,9 @@ class VideoPlayer:
         if self.start_time is None:
             self.start_time = time.time()
 
-        elapsed = (current_time if current_time is not None else time.time()) - self.start_time
+        elapsed = (
+            current_time if current_time is not None else time.time()
+        ) - self.start_time
         target_frame = int(elapsed * self.fps)
 
         if self.total_frames <= target_frame:
