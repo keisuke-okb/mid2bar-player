@@ -1,0 +1,11 @@
+numpy
+pandas
+customtkinter
+py_midicsv
+mido
+pygame>2.6
+Pillow
+opencv-python
+sounddevice
+chardet
+tqdm

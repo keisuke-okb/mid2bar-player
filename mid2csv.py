@@ -6,10 +6,10 @@ import os
 
 def midi_to_csv(input_path):
     csv_string = pm.midi_to_csv(input_path, strict=False)
-    df = pd.DataFrame([data.strip().split(", ") for data in csv_string]).applymap(
+    df = pd.DataFrame([data.strip().split(", ") for data in csv_string]).map(
         lambda x: x.replace('"', "") if isinstance(x, str) else x
     )
-    df = df.applymap(lambda x: x.replace('"', "") if isinstance(x, str) else x)
+    df = df.map(lambda x: x.replace('"', "") if isinstance(x, str) else x)
     df.loc[(df[2] == "Note_on_c") & (df[5] == "0"), 2] = "Note_off_c"
     df.loc[df.loc[df[2] == "End_track"].index[:-1], 2] = "End_track_others"
     return df

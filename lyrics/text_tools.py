@@ -257,7 +257,7 @@ def draw_lyric_image_with_ruby(
                 (settings.GENERAL.PART_ICON_HEIGHT / original_height) * original_width
             )
             resized_image = paste_image.resize(
-                (new_width, settings.GENERAL.PART_ICON_HEIGHT), Image.ANTIALIAS
+                (new_width, settings.GENERAL.PART_ICON_HEIGHT), Image.Resampling.LANCZOS
             )
 
             _x_lyric = _x_lyric - settings.GENERAL.PART_ICON_MARGIN_X
