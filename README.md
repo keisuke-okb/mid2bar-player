@@ -1,4 +1,17 @@
-# MID2BAR-Player
+<div align="center">
+  <img src="./images/ui/MID2BAR.ico" alt="Repository Icon" width="100" />
+  <p style="font-weight: bold;">MID2BAR-Player</p>
+</div>
+
+<div align="center">
+
+[![Python Version](https://img.shields.io/badge/python-3.9~-blue.svg)](https://www.python.org/)
+[![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![GitHub Release](https://img.shields.io/github/v/release/keisuke-okb/mid2bar-player)](https://github.com/keisuke-okb/mid2bar-player/releases)
+[![Downloads](https://img.shields.io/github/downloads/keisuke-okb/mid2bar-player/total)](https://github.com/keisuke-okb/mid2bar-player/releases)
+
+
+</div>
 
 A standalone karaoke player that generates karaoke subtitle videos using ruby-annotated LRC lyric files, melody MIDI data, and background videos.
 
@@ -12,6 +25,7 @@ A standalone karaoke player that generates karaoke subtitle videos using ruby-an
 
 - OS: Windows 11
 - ディスプレイ：Full HD(1920x1080)以上の解像度
+- 外部ソフトウェア：ffmpeg (画面の録画機能を使用する場合。ffmpeg.exe, ffprove.exeがあるフォルダを環境変数に登録するか、当アプリケーションのあるフォルダ直下に配置してください。)
 
 
 ## サンプルプロジェクトを使ったチュートリアル（ビルド済みパッケージ）
@@ -120,6 +134,7 @@ PS> .\venv\Scripts\Activate.ps1
 ## マイク入力とリアルタイム採点（参考程度の機能）
 
 - 設定でマイク入力をONにして起動するか、再生中に `M` でマイク入力を有効にすると、FFTベースのピッチ検出により歌声を解析してノートとの一致度やピッチ精度をページ単位で算出します。
+- 画面をクリックしてメニューを表示すると、リアルタイムで点数を確認できます。
 - マイク入力の閾値や遅延補正などのパラメータは設定ファイル（`app_settings/settings.json`）で調整できます。
 
 
