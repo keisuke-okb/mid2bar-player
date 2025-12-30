@@ -20,6 +20,8 @@
 
 A standalone karaoke player that generates karaoke subtitle videos with pitch guide bar using ruby-annotated LRC lyric files, melody MIDI data, and background videos. 
 
+- **IMPORTANT**: This software is designed primarily for generating subtitles for Japanese lyrics and English lyrics with Japanese ruby annotations. Subtitles for other languages may not work as intended and could result in unexpected bugs or issues.
+
 - You may upload videos created with this repository (including modified code or the prebuilt packages) to video-sharing sites; please credit the software as **MID2BAR-Player**. The author assumes no responsibility for issues arising from uploading created videos.
 
 ## Overview
