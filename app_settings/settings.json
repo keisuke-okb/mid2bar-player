@@ -86,6 +86,6 @@
     "NOTE_NAMES": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
     "AUDIO_CODEC": "aac",
     "AUDIO_BPS": "320k",
-    "VIDEO_CODEC": "h264_nvenc",
+    "VIDEO_CODEC": "libx264",
     "VIDEO_BPS": "10M"
 }
