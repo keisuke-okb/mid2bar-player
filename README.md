@@ -9,40 +9,52 @@
 [![Code style](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 [![GitHub Release](https://img.shields.io/github/v/release/keisuke-okb/mid2bar-player)](https://github.com/keisuke-okb/mid2bar-player/releases)
 [![Downloads](https://img.shields.io/github/downloads/keisuke-okb/mid2bar-player/total)](https://github.com/keisuke-okb/mid2bar-player/releases)
-
+[![English](https://img.shields.io/badge/README-English-green)](README.md)
+[![日本語](https://img.shields.io/badge/README-日本語-blue)](./README_ja.md)
 
 </div>
 
+👉 [日本語版 READMEはこちら(README_ja.md)](./README_ja.md)
+
+# MID2BAR-Player
+
 A standalone karaoke player that generates karaoke subtitle videos with pitch guide bar using ruby-annotated LRC lyric files, melody MIDI data, and background videos. 
 
-## 概要
+- You may upload videos created with this repository (including modified code or the prebuilt packages) to video-sharing sites; please credit the software as **MID2BAR-Player**. The author assumes no responsibility for issues arising from uploading created videos.
 
-- **MID2BAR-Player**: MIDIのメロディ情報とLRC（ルビ対応）歌詞、任意の背景動画／音声を組み合わせてカラオケ表示・可視化するスタンドアロンプレイヤーです。
-- **主な機能**: 譜割り（区切り）を作成したメロディーMIDIファイルと歌詞と同期表示、表示エフェクト（ノートバー、グロー、パーティクル）、マイク入力によるリアルタイム採点（実際のカラオケ機器のものとは異なり、音程の一致度のみを算出しています。参考程度とお考え下さい。）、映像の重ね合わせ、録画（エクスポート）機能。
+## Overview
 
+* **MID2BAR-Player**: A standalone player that visualizes karaoke by combining melody MIDI data, LRC lyrics (with ruby/furigana support), and optional background video/audio.
+* **Main features**: Synced display of melody MIDI files (with measure/page markers) and lyrics, visual effects (note bars, glow, particles), real-time microphone input scoring (this is FFT-based pitch matching only — not equivalent to commercial karaoke scoring; use for reference), video overlay, and recording (export) functionality.
 
-### 動作環境
+---
 
-- OS: Windows / masOS* / Linux*
-  - 音程バーのページ切り替えアニメーション時に画面がチカチカする場合、`app_settings/settings.json`>`FADE_TIME`を`0.0`に設定してください。
-- 外部ソフトウェア：ffmpeg (画面の録画機能を使用する場合。ffmpeg.exe, ffprove.exeがあるフォルダを環境変数に登録するか、当アプリケーションのあるフォルダ直下に配置してください。)
+## Supported Platforms
 
+* OS: Windows / macOS* / Linux*
 
-## サンプルプロジェクトを使ったチュートリアル（Windows向けビルド済みパッケージの例）
+  * If the pitch-bar page transition causes screen flicker, set `FADE_TIME` to `0.0` in `app_settings/settings.json`.
+* External software: `ffmpeg` (required for screen recording). Put `ffmpeg.exe` and `ffprobe.exe` in a folder on your PATH or place them in the same folder as this application.
 
-1. `MID2BAR-Player.exe` を起動します。
-2. 「ファイル＞プロジェクトを開く」メニューから、「sample/sample_project.json」を読み込むと以下の設定がサンプルの音楽に設定されます。
-	- 音声ファイル（例: WAV / MP3など）
-	- MIDIファイル（.mid）
-	- 歌詞ファイル（LRC, 拡張ルビ形式）
-	- 背景動画（任意）
-3. 画面下の「設定を適用して再生」を押すと、カラオケ字幕動画の再生の準備が始まります。読み込みが完了すると、歌詞のプレビュー生成など初期処理が行われます（生成中はメッセージが表示されます）。
-4. 準備が完了した後、スペースキーを押して再生を開始します。
+---
 
+## Quick tutorial using the sample project (example: Windows prebuilt package)
 
-## 使い方（ソースコード）
+1. Launch `MID2BAR-Player.exe`.
+2. From the menu **File > Open Project**, load `sample/sample_project.json`. This will set up the sample music with these assets:
 
-1. 仮想環境などでMID2BAR-Player向けの環境を作成してください。
+   * Audio file (e.g., WAV / MP3)
+   * MIDI file (.mid)
+   * Lyrics file (LRC, extended ruby format)
+   * Background video (optional)
+3. Click **Apply Settings and Prepare Playback** at the bottom of the window. The player will start preparing the karaoke subtitle video. When loading finishes, initial processing like lyric preview generation runs (status messages appear during generation).
+4. When preparation is complete, press the Space key to start playback.
+
+---
+
+## Usage (from source)
+
+1. Create a Python virtual environment for MID2BAR-Player:
 
 ```powershell
 PS> git clone https://github.com/keisuke-okb/mid2bar-player
@@ -51,33 +63,41 @@ PS> python -m venv venv
 PS> .\venv\Scripts\Activate.ps1
 ```
 
-
 ```powershell
 (venv) PS> pip install -r requirements.txt
 ```
 
-2. `python main_gui.py`を実行するとビルド済みパッケージと同様に設定を行い、プレイヤーを起動できます。
-3. `main.py`を参考として、ほかのPythonプログラムからMID2BAR-Playerを呼び出すことも可能です。
+2. Run the player with:
 
+```powershell
+python main_gui.py
+```
 
-## 手元のデータを使ってカラオケ動画を作成する手順
+This launches the player with the same configuration flow as the prebuilt package.
 
-### 1. ルビ付きのLRC歌詞ファイルを作成
+3. You can also call MID2BAR-Player from other Python programs; see `main.py` as a reference.
 
-サンプルの歌詞ファイルをもとに、「RhythmicaLyrics」などを用いて拡張ルビ規格のLRCファイルを作成してください。
-**「①」「②」などをタイムタグで挟むと、パート分けとして認識します。**
-パート分け時のアイコンや色の設定は**歌詞字幕用の設定ファイル**（デフォルトは「lyrics_settings/settings_default.json」）で変更することが可能です。
+---
 
-- `sample/【音楽：魔王魂】シャイニングスター（ショート）.lrc`：通常の歌詞ファイル
-- `【音楽：魔王魂】シャイニングスター（ショート）_パート字幕.lrc`：パート分け字幕（実際の曲とは異なり、記法の参照用です）
+## How to create a karaoke video from your own assets
 
-当ソフトウェアは、空白行を歌詞ブロックの区切りとして認識します。例えば、最初の２行は一つのブロックになります：
+### 1. Create an LRC lyric file with ruby/furigana
+
+Use a sample LRC or a tool such as **RhythmicaLyrics** to create an extended ruby-format LRC file.
+**If you wrap tokens like “①”, “②” with time tags, the software recognizes them as part switches (part markers).**
+Icons and colors used for part markers can be changed in the lyrics settings file (default: `lyrics_settings/settings_default.json`).
+
+* `sample/【音楽：魔王魂】シャイニングスター（ショート）.lrc`: normal lyrics file
+* `【音楽：魔王魂】シャイニングスター（ショート）_パート字幕.lrc`: part-separated subtitle example (for notation reference; not necessarily matching the original song)
+
+The player recognizes blank lines as lyric block separators. For example, the first two lines below are treated as a single block:
+
 ```
 [00:09:65]た[00:09:83]だ[00:10:39]風[00:10:39]([00:10:39]かぜ[00:11:17])[00:11:17]に[00:11:37]揺[00:11:37]([00:11:37]ゆ[00:11:54])[00:11:54]ら[00:11:71]れ[00:11:90]て[00:12:48]
 [00:12:66]何[00:12:66]([00:12:66]なに[00:13:02])[00:13:02]も[00:13:19]考[00:13:19]([00:13:19]かんが[00:14:19])[00:14:19]え[00:14:57]ず[00:14:75]に[00:15:48]
 ```
 
-途中空白を挟まず３行連続している箇所は、３行をまとめて一つのブロックとして認識します。
+Three consecutive lines without blank lines are treated as a single block:
 
 ```
 [00:35:29]シャ[00:35:45]イ[00:35:61]ニ[00:35:76]ン[00:35:94]グ[00:36:09]ス[00:36:24]ター[00:36:58]綴[00:36:58]([00:36:58]つづ[00:37:30])[00:37:30]れ[00:37:49]ば[00:37:94]
@@ -85,496 +105,501 @@ PS> .\venv\Scripts\Activate.ps1
 [00:44:56]新[00:44:56]([00:44:56]あら[00:44:91])[00:44:91]た[00:45:29]な[00:45:66]世[00:45:66]([00:45:66]せ[00:46:07])[00:46:07]界[00:46:07]([00:46:07]かい[00:46:63])[00:46:63]へ[00:47:19]
 ```
 
-### 2. メロディーMIDIデータの音程バー表示区切りを作成
+---
 
-- **このソフトウェアは、MIDIファイルの「マーカー」が挿入されている場所をページ区切りとして認識します。**
-- 各種MIDI編集ソフトウェアでマーカーを挿入するか、パッケージ同梱の`MIDI Marker Editor.exe`を使用してください。
+### 2. Insert page/measure markers for pitch-bar display in the melody MIDI
 
+* **The player recognizes MIDI “markers” as page/section boundaries for the pitch-bar display.**
+* Insert markers using any MIDI editor or use the bundled `MIDI Marker Editor.exe`.
 
-1. `MIDI Marker Editor.exe`を実行し、メニュー「File＞Open MIDI...」を押して表示させたいメロディラインのMIDIデータを読み込みます。**誤動作を避けるため、主旋律のMIDIチャンネルは0に設定してください。**
-2. 同期した音源データを「File＞Set reference audio...」メニューから選択し、再生ボタンを押すと音源が再生され、現在位置が動くことを確認します。
-3. 音程バーを表示する両端の区切りを挿入したい箇所でダブルクリックすると、マーカーが挿入されます。
-4. 「File＞Save MIDI with markers...」メニューを押して、マーカーが挿入されたメロディーラインのMIDIファイルを保存します。
-5. `MID2BAR-Player`本体で書き出したMIDIファイルを指定します。
+Steps with `MIDI Marker Editor.exe`:
 
+1. Launch `MIDI Marker Editor.exe` and use **File > Open MIDI...** to load the melody MIDI line you want to display. **To avoid misbehavior, set the main melody’s MIDI channel to 0.**
+2. Select the reference audio under **File > Set reference audio...**, press play, and verify the audio plays and the playback position moves.
+3. Double-click where you want the start/end boundaries for the pitch-bar display to insert markers.
+4. Save the MIDI with markers via **File > Save MIDI with markers...**.
+5. In MID2BAR-Player, point to the MIDI file you saved with markers.
 
-### 3. （オプション）各種画像データ、設定ファイルの準備
+---
 
-その他、プレイヤーに表示する画像や詳細な設定を変更できます。
+### 3. (Optional) Prepare images and setting files
 
-- スプラッシュ画像：再生冒頭、プレイヤー全体に表示する画像
-- タイトルロゴ画像：再生冒頭、プレイヤーの中心に表示する画像（曲名を想定）
-- 音源：MP3など、プレイヤーで再生する音楽ファイル
-- カラオケ字幕生成の設定：字幕生成の詳細設定（デフォルトは`lyrics_settings/settings_default.json`）
-- プレイヤー全般設定：MID2BAR-Playerの表示にかかわる全般の設定（デフォルトは`app_settings/settings.json`）
-- 画像素材設定：MID2BAR-Playerで使用する画像素材の設定（デフォルトは`app_settings/assets.json`）
+You can customize images and various settings used by the player:
 
+* Splash image: shown across the player at the start of playback
+* Title logo: centered at the start (intended for song title)
+* Audio source: MP3 or other music file to play in the player
+* Karaoke subtitle generation settings: detailed subtitle generation options (default: `lyrics_settings/settings_default.json`)
+* Player general settings: overall MID2BAR-Player settings (default: `app_settings/settings.json`)
+* Image/assets settings: image assets list used by MID2BAR-Player (default: `app_settings/assets.json`)
 
-## 基本操作（キーボード・マウス）
+---
 
-- **Space**: 再生 / 一時停止
-- **R**: 再スタート（先頭から再生）
-- **A**: 小節の自動再生（Bar Auto Play）ON/OFF
-- **M**: マイク入力（リアルタイム採点）ON/OFF
-- **F11**: フルスクリーン切替
-- **↑ / ↓**: 音量調整
-- **ESC**: 終了
-- **マウス左クリック**: メニューの表示、再生位置をシーク（シークバー上）
+## Basic controls (keyboard & mouse)
 
+* **Space**: Play / Pause
+* **R**: Restart (play from beginning)
+* **A**: Toggle Bar Auto Play (automatic bar progression)
+* **M**: Toggle microphone input (real-time scoring)
+* **F11**: Toggle fullscreen
+* **Up / Down**: Volume up / down
+* **Esc**: Exit
+* **Left mouse click**: Open menus / seek playback position (on the seek bar)
 
-## 録画（動画出力）
+---
 
-- `ffmpeg`を利用して、プレイヤーの映像をMP4動画として書き出すことができます。
-- 録画を有効にして起動すると、再生中の映像と音声を合成して動画出力できます。
-- 録画中は、画面を操作しないでください。
+## Recording (video export)
 
+* The player can export video (MP4) using `ffmpeg`.
+* If recording is enabled at startup, the player will combine the current video and audio into an output file while playing.
+* Please avoid interacting with the screen while recording.
 
-## トラブルシューティング
+---
 
-- 音が出ない場合: システムの音量、Pygameが使用するオーディオデバイス、ファイル形式を確認してください。
-- マイクが反応しない場合: マイクがシステムで有効か、アプリにマイク許可があるかを確認してください。
+## Troubleshooting
 
+* No sound: Check system volume, the audio device used by Pygame, and file format compatibility.
+* Microphone not responding: Ensure the microphone is enabled in the OS and the application has permission to use it.
 
-## マイク入力とリアルタイム採点（参考程度の機能）
+---
 
-- 設定でマイク入力をONにして起動するか、再生中に `M` でマイク入力を有効にすると、FFTベースのピッチ検出により歌声を解析してノートとの一致度やピッチ精度をページ単位で算出します。
-- 画面をクリックしてメニューを表示すると、リアルタイムで点数を確認できます。
-- マイク入力の閾値や遅延補正などのパラメータは設定ファイル（`app_settings/settings.json`）で調整できます。
+## Microphone input and real-time scoring (reference-only feature)
 
+* Enable microphone input in settings or toggle it during playback with `M`. The player analyzes your singing using FFT-based pitch detection and computes pitch-match and pitch-accuracy scores per page.
+* Click the screen to open the menu and see real-time scoring.
+* Microphone thresholds and delay compensation settings are adjustable in `app_settings/settings.json`.
 
-## ライセンス
+---
 
-- リポジトリに含まれる各種ファイルのうち、別途ファイル名にライセンスが明記されていないファイルはすべてリポジトリの `LICENSE` に基づきます。
-- `sample/`に含まれるサンプル音楽の著作権は[森田交一（魔王魂）](https://maou.audio/)に帰属します。
-- 本リポジトリのプログラム（改変含む）またはビルド済みパッケージを利用して作成した動画を動画投稿サイトにアップロードすることが可能です。その際は、使用したソフトウェアとして「MID2BAR-Player」と表記をお願いいたします。また、作成した動画のアップロードによって生じた問題についてはいかなる責任を負いかねますのでご注意ください。
+## License
 
+* Files in this repository are governed by the repository `LICENSE`, unless a file explicitly states a different license.
+* Sample music under `sample/` is copyrighted by [森田交一 (魔王魂)](https://maou.audio/).
+* You may upload videos created with this repository (including modified code or the prebuilt packages) to video-sharing sites; please credit the software as **MID2BAR-Player**. The author assumes no responsibility for issues arising from uploading created videos.
 
-# 設定一覧
+---
 
-## プレイヤー全般設定：app_settings/settings.json
+# Configuration reference
 
-#### 画面・ウィンドウ設定
+## Player general settings: `app_settings/settings.json`
 
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `SCREEN_WIDTH` | 1920 | 描画領域の幅（ピクセル） |
-| `SCREEN_HEIGHT` | 1080 | 描画領域の高さ（ピクセル） |
-| `WINDOW_WIDTH` | 1920 | ウィンドウの初期幅（ピクセル） |
-| `WINDOW_HEIGHT` | 1080 | ウィンドウの初期高さ（ピクセル） |
-| `FULL_SCREEN` | false | フルスクリーンモードで起動するか |
-| `SCREEN_FPS` | 60 | フレームレート（FPS） |
-| `MENU_H` | 300 | メニューバーの高さ（ピクセル） |
-| `WINDOW_BACKGROUND_COLOR` | [10, 10, 10] | ウィンドウ背景色（RGB） |
+### Screen & window settings
 
-#### UI・フォント設定
+| Key                       | Default      | Description                       |
+| ------------------------- | ------------ | --------------------------------- |
+| `SCREEN_WIDTH`            | 1920         | Width of the rendering area (px)  |
+| `SCREEN_HEIGHT`           | 1080         | Height of the rendering area (px) |
+| `WINDOW_WIDTH`            | 1920         | Initial window width (px)         |
+| `WINDOW_HEIGHT`           | 1080         | Initial window height (px)        |
+| `FULL_SCREEN`             | false        | Start in fullscreen mode          |
+| `SCREEN_FPS`              | 60           | Frame rate (FPS)                  |
+| `MENU_H`                  | 300          | Menu bar height (px)              |
+| `WINDOW_BACKGROUND_COLOR` | [10, 10, 10] | Window background color (RGB)     |
 
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `UI_LANG` | "ja" | UIの表示言語（"ja": 日本語、"en": 英語） |
-| `UI_FONT` | "./fonts/NotoSansJP-Medium.ttf" | UIに使用するフォントファイルのパス |
-| `BAR_COUNT_FONT` | "./fonts/NotoSansJP-Black.ttf" | バーカウント表示用フォントファイルのパス |
-| `BAR_COUNT_FONT_SIZE` | 30 | バーカウントのフォントサイズ |
+### UI & fonts
 
-#### 再生設定
+| Key                   | Default                         | Description                                 |
+| --------------------- | ------------------------------- | ------------------------------------------- |
+| `UI_LANG`             | "ja"                            | UI language ("ja": Japanese, "en": English) |
+| `UI_FONT`             | "./fonts/NotoSansJP-Medium.ttf" | Path to UI font file                        |
+| `BAR_COUNT_FONT`      | "./fonts/NotoSansJP-Black.ttf"  | Font path for bar count display             |
+| `BAR_COUNT_FONT_SIZE` | 30                              | Font size for bar count                     |
 
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `PLAYBACK_TIME_SCALE` | 1.001 | 再生速度の補正値（1.0が通常速度。録画時は無視されます。時間が進むにつれ、音楽と字幕・音程バーがずれる場合の補正に使用します。） |
-| `DEFAULT_VOLUME` | 80 | 初期音量（0〜100） |
-| `DISPLAY_TITLE_DURATION` | 2.0 | タイトル画面の表示時間（秒） |
-
-#### 色設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `BG_COLOR` | [20, 20, 40] | 背景色（RGB） |
-| `VIDEO_ALPHA` | 210 | 背景動画の不透明度（0〜255） |
-| `LINE_COLOR` | [100, 100, 100, 200] | ガイドラインの色（RGBA） |
-| `NOTE_COLOR` | [100, 100, 100] | 音符の色（RGB） |
-| `CURRENT_POS_COLOR` | [255, 50, 50] | 現在位置インジケーターの色（RGB） |
-| `PASSED_NOTE_COLOR` | [255, 200, 100] | 通過済み音符の色（RGB） |
-| `TEXT_COLOR` | [255, 255, 255] | テキストの色（RGB） |
-
-#### スプラッシュ画面設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `SPLASH_TEXT_X_OFFSET` | -50 | スプラッシュテキストのX軸オフセット |
-| `SPLASH_TEXT_Y_OFFSET` | -50 | スプラッシュテキストのY軸オフセット |
-| `SPLASH_TEXT_LINE_HEIGHT` | 80 | スプラッシュテキストの行間隔 |
-
-#### バー表示エリア設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `BAR_AREA_TOP` | 50 | バー表示エリアの上端位置（ピクセル） |
-| `BAR_AREA_HEIGHT` | 250 | バー表示エリアの高さ（ピクセル） |
-| `BAR_AREA_LEFT` | 100 | バー表示エリアの左端位置（ピクセル） |
-| `BAR_AREA_WIDTH` | 1720 | バー表示エリアの幅（ピクセル） |
-| `DISPLAY_PITCH_RANGE_MIN` | 23 | 表示する最小音域範囲（半音数） |
-
-#### 現在位置バー（Now Bar）設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `NOW_BAR_TOP` | 34 | 現在位置バーの上端位置（ピクセル） |
-| `NOW_BAR_WIDTH` | 200 | 現在位置バーの幅（ピクセル） |
-| `NOW_BAR_HEIGHT` | 286 | 現在位置バーの高さ（ピクセル） |
-| `HIDE_NOW_BAR_WHEN_NO_NOTES` | true | 音符がないときに現在位置バーを非表示にするか |
-
-#### バー自動演奏設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `BAR_AUTO_PLAY` | true | バー自動演奏モードを有効にするか |
-| `BAR_AUTO_PLAY_CHANNELS` | [0, 1, 2] | 自動演奏対象のMIDIチャンネル |
-| `BAR_PASSED_ROUGHNESS` | 10 | バーの塗りつぶし時の粗さ（滑らかさ） |
-
-#### エフェクト・アニメーション設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `BAR_PASSED_PARTICLE_RAND` | 0.7 | パーティクル発生確率（0.0〜1.0） |
-| `BAR_PASSED_COUNT_ANIMATION_TIME` | 0.8 | カウントアニメーションの時間（秒） |
-| `BAR_PASSED_COUNT_ANIMATION_CURVE_STRENGTH` | -0.1 | カウントアニメーションの曲線の強さ |
-| `BAR_PASSED_COUNT_ANIMATION_ACCEL` | 3.0 | カウントアニメーションの加速度 |
-| `BAR_PASSED_COUNT_ICON_SIZE` | 40 | カウントアイコンのサイズ（ピクセル） |
-| `BAR_PASSED_COUNT_ICON_MARGIN` | 10 | カウントアイコンの余白（ピクセル） |
-| `BAR_GLOW_DURATION` | 0.3 | バー発光エフェクトの持続時間（秒） |
-| `BAR_GLOW_SCALE` | 3.0 | バー発光時の拡大率 |
-
-#### カウント表示設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `BAR_PASSED_COUNT_ANIMATION_DICT` | {...} | 各音符タイプのアニメーション設定（位置と色） |
-| `BAR_COUNT_DICT` | {...} | 各音符タイプのカウント表示設定（位置と色） |
-
-#### BAR_PASSED_COUNT_ANIMATION_DICT / BAR_COUNT_DICT の音符タイプ
-
-- `normal`: 通常の音符
-- `max`: 最高音の音符
-- `min`: 最低音の音符
-- `up`: 急上昇する音符
-- `down`: 急降下する音符
-- `long`: 長い音符
-
-#### 音域ゲージ設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `RANGE_GAUGE_POS` | [1480, 354] | 音域ゲージの表示位置 [x, y] |
-| `RANGE_GAUGE_W` | 390 | 音域ゲージの幅（ピクセル） |
-| `RANGE_GAUGE_H` | 23 | 音域ゲージの高さ（ピクセル） |
-
-#### タイミング設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `PREVIEW_TIME` | 2.0 | バーのプレビュー時間（秒） |
-| `REMAIN_TIME` | 3.0 | バーの残留時間（秒） |
-| `FADE_TIME` | 0.5 | フェードイン/アウト時間（秒） |
-| `LAG_TIME` | 0.3 | 表示遅延時間（秒） |
-
-#### シークバー設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `SEEKBAR_TOP` | 850 | シークバーの上端位置（ピクセル） |
-| `SEEKBAR_LEFT` | 100 | シークバーの左端位置（ピクセル） |
-| `SEEKBAR_WIDTH` | 1720 | シークバーの幅（ピクセル） |
-| `SEEKBAR_HEIGHT` | 10 | シークバーの高さ（ピクセル） |
-
-#### スコアリング設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `PITCH_MATCH_SCORE_RATIO` | 0.3 | ピッチ一致度のスコア比重 |
-| `PITCH_ACCURACY_SCORE_RATIO` | 0.7 | ピッチ精度のスコア比重 |
-
-#### マイク入力設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `RMS_THRESHOLD` | 0.02 | マイク入力の音量閾値（RMS） |
-| `MIC_INPUT_DURATION` | 0.0 | マイク入力の持続時間（秒） |
-| `MIC_INPUT_DELAY` | 0.17 | マイク入力の遅延補正（秒） |
-| `MIC_INPUT_OFFSET` | 0.2 | マイク入力のオフセット（秒） |
-| `MIC_INPUT_PITCH_TOLERANCE` | 0.8 | ピッチ許容範囲（半音） |
-| `MIC_INPUT_NOTE_CONNECT_DURATION` | 0.1 | 音符接続の最大時間間隔（秒） |
-| `MIC_INPUT_MARGIN` | 0.01 | マイク入力のマージン時間（秒） |
-
-#### オーディオ設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `DEFAULT_SAMPLE_RATE` | 44100 | デフォルトのサンプリングレート（Hz） **使用するマイクデバイスのサンプルレートを確認してください** |
-| `DEFAULT_BLOCK_SIZE` | 4096 | オーディオブロックサイズ（サンプル数） |
-| `DEFAULT_CHANNELS` | 1 | デフォルトのチャンネル数（1: モノラル、2: ステレオ） |
-| `NOTE_NAMES` | ["C", "C#", ...] | 音名の配列 |
-
-#### 画面録画・エンコーディング設定
-
-| 項目 | デフォルト値 | 説明 |
-|------|-------------|------|
-| `AUDIO_CODEC` | "aac" | オーディオコーデック |
-| `AUDIO_BPS` | "320k" | オーディオビットレート |
-| `VIDEO_CODEC` | "libx264" | ビデオコーデック（GPUエンコードを使う場合、`h264_nvenc`などに変更可能） |
-| `VIDEO_BPS` | "10M" | ビデオビットレート |
-
-#### 注意事項
-
-- 座標や寸法の値は、`SCREEN_WIDTH`と`SCREEN_HEIGHT`を基準とした相対的な位置です
-- 色の値は`[R, G, B]`または`[R, G, B, A]`形式で、0〜255の範囲で指定します
-- タイミング設定は秒単位で指定します
-- マイク入力設定は、環境やマイクの性能に応じて調整が必要な場合があります
-
-
-## 画像素材：app_settings/assets.json
-
-### 概要
-
-`assets.json`は、MID2BAR-Playerで使用する画像素材のパスを定義する設定ファイルです。
-
-### 基本UI画像
-
-| 項目 | パス例 | 説明 |
-|------|--------|------|
-| `project_front` | "images/ui/project_front.png" | プロジェクト前面のUI画像（前景レイヤー） |
-| `project_back` | "images/ui/project_back.png" | プロジェクト背景のUI画像（背景レイヤー） |
-| `now_bar` | "images/ui/now_bar.png" | 現在位置を示すバーの画像 |
-| `range_gauge` | "images/ui/range_gauge.png" | 音域ゲージの画像 |
-
-## アイコン画像
-
-`icons`オブジェクトには、音符の特徴を示すアイコン画像を定義します。
-
-| 項目 | パス例 | 説明 |
-|------|--------|------|
-| `icons.up` | "images/pitch/up.png" | 急上昇音符のアイコン |
-| `icons.down` | "images/pitch/down.png" | 急降下音符のアイコン |
-| `icons.long` | "images/pitch/long.png" | 長音符のアイコン |
-
-## バー画像（bars）
-
-`bars`オブジェクトは、MIDIチャンネルごとに音符バーの画像を定義します。各チャンネルは、複数の音符タイプとパーツに分かれています。
-
-### 構造
+### Playback settings
+
+| Key                      | Default | Description                                                                                                                       |
+| ------------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `PLAYBACK_TIME_SCALE`    | 1.001   | Playback speed correction (1.0 = normal). Used to correct drift between audio and subtitles/pitch bars. (Ignored when recording.) |
+| `DEFAULT_VOLUME`         | 80      | Initial volume (0–100)                                                                                                            |
+| `DISPLAY_TITLE_DURATION` | 2.0     | Title screen display time (seconds)                                                                                               |
+
+### Color settings
+
+| Key                 | Default              | Description                            |
+| ------------------- | -------------------- | -------------------------------------- |
+| `BG_COLOR`          | [20, 20, 40]         | Background color (RGB)                 |
+| `VIDEO_ALPHA`       | 210                  | Background video opacity (0–255)       |
+| `LINE_COLOR`        | [100, 100, 100, 200] | Guideline color (RGBA)                 |
+| `NOTE_COLOR`        | [100, 100, 100]      | Note color (RGB)                       |
+| `CURRENT_POS_COLOR` | [255, 50, 50]        | Current position indicator color (RGB) |
+| `PASSED_NOTE_COLOR` | [255, 200, 100]      | Color for passed notes (RGB)           |
+| `TEXT_COLOR`        | [255, 255, 255]      | Text color (RGB)                       |
+
+### Splash screen settings
+
+| Key                       | Default | Description                 |
+| ------------------------- | ------- | --------------------------- |
+| `SPLASH_TEXT_X_OFFSET`    | -50     | X offset for splash text    |
+| `SPLASH_TEXT_Y_OFFSET`    | -50     | Y offset for splash text    |
+| `SPLASH_TEXT_LINE_HEIGHT` | 80      | Line height for splash text |
+
+### Bar display area settings
+
+| Key                       | Default | Description                                |
+| ------------------------- | ------- | ------------------------------------------ |
+| `BAR_AREA_TOP`            | 50      | Top position of the bar display area (px)  |
+| `BAR_AREA_HEIGHT`         | 250     | Height of the bar display area (px)        |
+| `BAR_AREA_LEFT`           | 100     | Left position of the bar display area (px) |
+| `BAR_AREA_WIDTH`          | 1720    | Width of the bar display area (px)         |
+| `DISPLAY_PITCH_RANGE_MIN` | 23      | Minimum pitch range to display (semitones) |
+
+### Now bar (current position) settings
+
+| Key                          | Default | Description                              |
+| ---------------------------- | ------- | ---------------------------------------- |
+| `NOW_BAR_TOP`                | 34      | Top position of the now bar (px)         |
+| `NOW_BAR_WIDTH`              | 200     | Width of the now bar (px)                |
+| `NOW_BAR_HEIGHT`             | 286     | Height of the now bar (px)               |
+| `HIDE_NOW_BAR_WHEN_NO_NOTES` | true    | Hide the now bar when there are no notes |
+
+### Bar auto-play settings
+
+| Key                      | Default   | Description                          |
+| ------------------------ | --------- | ------------------------------------ |
+| `BAR_AUTO_PLAY`          | true      | Enable bar auto-play mode            |
+| `BAR_AUTO_PLAY_CHANNELS` | [0, 1, 2] | MIDI channels targeted for auto-play |
+| `BAR_PASSED_ROUGHNESS`   | 10        | Roughness (smoothness) of bar fill   |
+
+### Effects & animation
+
+| Key                                         | Default | Description                           |
+| ------------------------------------------- | ------- | ------------------------------------- |
+| `BAR_PASSED_PARTICLE_RAND`                  | 0.7     | Particle spawn probability (0.0–1.0)  |
+| `BAR_PASSED_COUNT_ANIMATION_TIME`           | 0.8     | Count animation time (seconds)        |
+| `BAR_PASSED_COUNT_ANIMATION_CURVE_STRENGTH` | -0.1    | Curve strength for count animation    |
+| `BAR_PASSED_COUNT_ANIMATION_ACCEL`          | 3.0     | Acceleration for count animation      |
+| `BAR_PASSED_COUNT_ICON_SIZE`                | 40      | Count icon size (px)                  |
+| `BAR_PASSED_COUNT_ICON_MARGIN`              | 10      | Count icon margin (px)                |
+| `BAR_GLOW_DURATION`                         | 0.3     | Duration of bar glow effect (seconds) |
+| `BAR_GLOW_SCALE`                            | 3.0     | Scale factor during bar glow          |
+
+### Count display
+
+| Key                               | Default | Description                                             |
+| --------------------------------- | ------- | ------------------------------------------------------- |
+| `BAR_PASSED_COUNT_ANIMATION_DICT` | {...}   | Animation settings per note type (position & color)     |
+| `BAR_COUNT_DICT`                  | {...}   | Count display settings per note type (position & color) |
+
+#### Note types used in `BAR_PASSED_COUNT_ANIMATION_DICT` / `BAR_COUNT_DICT`
+
+* `normal`: regular note
+* `max`: highest note
+* `min`: lowest note
+* `up`: rapidly rising note
+* `down`: rapidly falling note
+* `long`: long note
+
+### Range gauge
+
+| Key               | Default     | Description                        |
+| ----------------- | ----------- | ---------------------------------- |
+| `RANGE_GAUGE_POS` | [1480, 354] | Position of the range gauge [x, y] |
+| `RANGE_GAUGE_W`   | 390         | Range gauge width (px)             |
+| `RANGE_GAUGE_H`   | 23          | Range gauge height (px)            |
+
+### Timing
+
+| Key            | Default | Description                |
+| -------------- | ------- | -------------------------- |
+| `PREVIEW_TIME` | 2.0     | Bar preview time (seconds) |
+| `REMAIN_TIME`  | 3.0     | Bar remain time (seconds)  |
+| `FADE_TIME`    | 0.5     | Fade in/out time (seconds) |
+| `LAG_TIME`     | 0.3     | Display lag time (seconds) |
+
+### Seek bar
+
+| Key              | Default | Description                        |
+| ---------------- | ------- | ---------------------------------- |
+| `SEEKBAR_TOP`    | 850     | Top position of the seek bar (px)  |
+| `SEEKBAR_LEFT`   | 100     | Left position of the seek bar (px) |
+| `SEEKBAR_WIDTH`  | 1720    | Seek bar width (px)                |
+| `SEEKBAR_HEIGHT` | 10      | Seek bar height (px)               |
+
+### Scoring
+
+| Key                          | Default | Description                     |
+| ---------------------------- | ------- | ------------------------------- |
+| `PITCH_MATCH_SCORE_RATIO`    | 0.3     | Weight for pitch-match score    |
+| `PITCH_ACCURACY_SCORE_RATIO` | 0.7     | Weight for pitch-accuracy score |
+
+### Microphone input
+
+| Key                               | Default | Description                                      |
+| --------------------------------- | ------- | ------------------------------------------------ |
+| `RMS_THRESHOLD`                   | 0.02    | Microphone RMS threshold                         |
+| `MIC_INPUT_DURATION`              | 0.0     | Microphone input duration (seconds)              |
+| `MIC_INPUT_DELAY`                 | 0.17    | Delay compensation for mic input (seconds)       |
+| `MIC_INPUT_OFFSET`                | 0.2     | Microphone input offset (seconds)                |
+| `MIC_INPUT_PITCH_TOLERANCE`       | 0.8     | Pitch tolerance (semitones)                      |
+| `MIC_INPUT_NOTE_CONNECT_DURATION` | 0.1     | Max time gap to connect detected notes (seconds) |
+| `MIC_INPUT_MARGIN`                | 0.01    | Mic input margin time (seconds)                  |
+
+### Audio
+
+| Key                   | Default          | Description                                                              |
+| --------------------- | ---------------- | ------------------------------------------------------------------------ |
+| `DEFAULT_SAMPLE_RATE` | 44100            | Default sample rate (Hz) — **verify your microphone device sample rate** |
+| `DEFAULT_BLOCK_SIZE`  | 4096             | Audio block size (samples)                                               |
+| `DEFAULT_CHANNELS`    | 1                | Default channels (1: mono, 2: stereo)                                    |
+| `NOTE_NAMES`          | ["C", "C#", ...] | Array of note names                                                      |
+
+### Screen recording & encoding
+
+| Key           | Default   | Description                                                  |
+| ------------- | --------- | ------------------------------------------------------------ |
+| `AUDIO_CODEC` | "aac"     | Audio codec                                                  |
+| `AUDIO_BPS`   | "320k"    | Audio bitrate                                                |
+| `VIDEO_CODEC` | "libx264" | Video codec (for GPU encoding, change to `h264_nvenc`, etc.) |
+| `VIDEO_BPS`   | "10M"     | Video bitrate                                                |
+
+### Notes & cautions
+
+* Coordinates and sizes are relative to `SCREEN_WIDTH` and `SCREEN_HEIGHT`.
+* Colors are `[R, G, B]` or `[R, G, B, A]`, 0–255.
+* Timing values are in seconds.
+* Microphone settings may require tuning depending on environment and microphone quality.
+
+---
+
+## Image assets: `app_settings/assets.json`
+
+### Overview
+
+`assets.json` defines image asset paths used by MID2BAR-Player.
+
+### Basic UI images
+
+| Key             | Example path                  | Description                                    |
+| --------------- | ----------------------------- | ---------------------------------------------- |
+| `project_front` | "images/ui/project_front.png" | Project front UI image (foreground layer)      |
+| `project_back`  | "images/ui/project_back.png"  | Project background UI image (background layer) |
+| `now_bar`       | "images/ui/now_bar.png"       | Image for the current position indicator       |
+| `range_gauge`   | "images/ui/range_gauge.png"   | Image for the range gauge                      |
+
+### Icon images
+
+The `icons` object defines icon images that indicate note features.
+
+| Key          | Example path            | Description                   |
+| ------------ | ----------------------- | ----------------------------- |
+| `icons.up`   | "images/pitch/up.png"   | Icon for rapidly rising note  |
+| `icons.down` | "images/pitch/down.png" | Icon for rapidly falling note |
+| `icons.long` | "images/pitch/long.png" | Icon for a long note          |
+
+### Bar images (`bars`)
+
+`bars` defines note-bar images per MIDI channel. Each channel contains multiple note types and parts.
+
+#### Structure
 
 ```
 bars
-├── "0" (チャンネル0)
-│   ├── normal (通常の音符)
-│   ├── max (最高音の音符)
-│   ├── min (最低音の音符)
-│   ├── match (マイク入力：部分一致)
-│   ├── match_all (マイク入力：完全一致)
-│   └── unmatch (マイク入力：不一致)
-├── "1" (チャンネル1)
+├── "0" (channel 0)
+│   ├── normal
+│   ├── max
+│   ├── min
+│   ├── match
+│   ├── match_all
+│   └── unmatch
+├── "1" (channel 1)
 │   └── ...
-└── "2" (チャンネル2)
+└── "2" (channel 2)
     └── ...
 ```
 
-### 音符タイプ
+#### Note types
 
-| タイプ | 説明 | 使用場面 |
-|--------|------|----------|
-| `normal` | 通常の音符 | 最高音・最低音以外の音符 |
-| `max` | 最高音の音符 | 楽曲内で最も高い音程の音符 |
-| `min` | 最低音の音符 | 楽曲内で最も低い音程の音符 |
-| `match` | 部分一致 | マイク入力モード時、音程は一致しているが完全には歌えていない |
-| `match_all` | 完全一致 | マイク入力モード時、音程・タイミングともに完璧に一致 |
-| `unmatch` | 不一致 | マイク入力モード時、音程が一致していない |
+| Type        | Description                       | Use case                              |
+| ----------- | --------------------------------- | ------------------------------------- |
+| `normal`    | Regular note (not highest/lowest) | Default                               |
+| `max`       | Highest note in the piece         | Highlight highest pitch               |
+| `min`       | Lowest note in the piece          | Highlight lowest pitch                |
+| `match`     | Partial match (mic mode)          | Pitch roughly matches but not perfect |
+| `match_all` | Perfect match (mic mode)          | Pitch and timing are both correct     |
+| `unmatch`   | Mismatch (mic mode)               | Pitch does not match                  |
 
-### バーパーツ
+#### Bar parts
 
-各音符タイプには、以下の画像パーツが必要です。バーは3分割（左・中央・右）の伸縮可能な構造になっています。
+Each note type uses the following image parts. Bars are stretchable with three segments (left, middle, right).
 
-#### 背景パーツ（back）
+##### Background parts (`back`)
 
-| パーツ | パス例 | 説明 |
-|--------|--------|------|
-| `back_left` | "images/bar/1_winered/back_left.png" | バー背景の左端部分 |
-| `back_mid` | "images/bar/1_winered/back_mid.png" | バー背景の中央部分（伸縮） |
-| `back_right` | "images/bar/1_winered/back_right.png" | バー背景の右端部分 |
+| Part         | Example path                          | Description                      |
+| ------------ | ------------------------------------- | -------------------------------- |
+| `back_left`  | "images/bar/1_winered/back_left.png"  | Left edge of the bar background  |
+| `back_mid`   | "images/bar/1_winered/back_mid.png"   | Middle (stretchable) background  |
+| `back_right` | "images/bar/1_winered/back_right.png" | Right edge of the bar background |
 
-#### 塗りつぶしパーツ（fill）
+##### Fill parts (`fill`)
 
-| パーツ | パス例 | 説明 |
-|--------|--------|------|
-| `fill_left` | "images/bar/1_winered/fill_left.png" | 演奏進行中の塗りつぶし左端 |
-| `fill_mid` | "images/bar/1_winered/fill_mid.png" | 演奏進行中の塗りつぶし中央（伸縮） |
-| `fill_right` | "images/bar/1_winered/fill_right.png" | 演奏進行中の塗りつぶし右端 |
+| Part         | Example path                          | Description                      |
+| ------------ | ------------------------------------- | -------------------------------- |
+| `fill_left`  | "images/bar/1_winered/fill_left.png"  | Left edge of the fill (progress) |
+| `fill_mid`   | "images/bar/1_winered/fill_mid.png"   | Middle (stretchable) fill        |
+| `fill_right` | "images/bar/1_winered/fill_right.png" | Right edge of the fill           |
 
-#### 通過済みパーツ（passed）
+##### Passed parts (`passed`)
 
-| パーツ | パス例 | 説明 |
-|--------|--------|------|
-| `passed_left` | "images/bar/1_winered/passed_left.png" | 演奏完了後のバー左端 |
-| `passed_mid` | "images/bar/1_winered/passed_mid.png" | 演奏完了後のバー中央（伸縮） |
-| `passed_right` | "images/bar/1_winered/passed_right.png" | 演奏完了後のバー右端 |
+| Part           | Example path                            | Description                           |
+| -------------- | --------------------------------------- | ------------------------------------- |
+| `passed_left`  | "images/bar/1_winered/passed_left.png"  | Left edge after completion            |
+| `passed_mid`   | "images/bar/1_winered/passed_mid.png"   | Middle (stretchable) after completion |
+| `passed_right` | "images/bar/1_winered/passed_right.png" | Right edge after completion           |
 
-#### エフェクトパーツ
+##### Effect parts
 
-| パーツ | パス例 | 説明 |
-|--------|--------|------|
-| `glow` | "images/bar/1_winered/glow.png" | バー通過時の発光エフェクト画像 |
+| Part   | Example path                    | Description                         |
+| ------ | ------------------------------- | ----------------------------------- |
+| `glow` | "images/bar/1_winered/glow.png" | Glow effect shown when a bar passes |
 
-## カスタマイズ例
+---
 
-### 新しいチャンネルの追加
+## Customization examples
 
-複数のパートを持つ楽曲の場合、チャンネルごとに異なる色やデザインのバーを設定できます。
+### Adding a new channel
+
+For multi-part songs you can set different colors/designs per MIDI channel:
 
 ```json
 {
   "bars": {
-    "0": {
-      "normal": { /* ワインレッドのバー */ }
-    },
-    "1": {
-      "normal": { /* ブルーのバー */ }
-    },
-    "2": {
-      "normal": { /* グリーンのバー */ }
-    }
+    "0": { "normal": { /* wine-red bar */ } },
+    "1": { "normal": { /* blue bar */ } },
+    "2": { "normal": { /* green bar */ } }
   }
 }
 ```
 
-### マイク入力用のバーデザイン例
+### Bar designs for mic input
 
-`match`、`match_all`、`unmatch`タイプは、マイク入力モードで使用されます。
+`match`, `match_all`, and `unmatch` are used in microphone input mode:
 
-- **match_all**: 完璧に歌えた時 → 鮮やかなグラデーション
-- **match**: ほぼ正確だが完璧ではない時 → 単色
-- **unmatch**: 音程が外れた時 → 警告色（赤など）
+* **match_all**: Perfect singing → vivid gradient
+* **match**: Almost correct → flat/single color
+* **unmatch**: Out of pitch → warning color (e.g., red)
 
-### 画像仕様
+### Image specs
 
-#### 推奨サイズ
+#### Recommended sizes
 
-- **バーパーツ**: 高さは統一、幅は左右端が固定、中央部分は1px幅でも可（伸縮される）
-- **now_bar**: `settings.json`の`NOW_BAR_WIDTH`×`NOW_BAR_HEIGHT`に合わせる
-- **アイコン**: `settings.json`の`BAR_PASSED_COUNT_ICON_SIZE`の正方形
+* **Bar part images**: Keep heights consistent. Left/right edge widths are fixed; the middle part can be 1px wide (it will be stretched).
+* **now_bar**: Match `NOW_BAR_WIDTH` × `NOW_BAR_HEIGHT` in `settings.json`.
+* **Icons**: Square sized according to `BAR_PASSED_COUNT_ICON_SIZE` in `settings.json`.
 
-#### ファイル形式
+#### File formats
 
-- PNG形式を推奨（透過対応）
-- 背景が透明なアルファチャンネル付き画像を使用すると、重ね合わせ表示が美しくなります
+* PNG recommended (supports alpha/transparency).
+* Use images with transparent background for nicer overlays.
 
-### 注意事項
+### Notes
 
-- すべてのチャンネル・タイプ・パーツについて画像ファイルを用意する必要があります
-- パスは相対パスで指定し、プロジェクトルートからの位置を記述します
-- 画像が見つからない場合、アプリケーション起動時にエラーが発生します
-- バーの左右端パーツの幅は`settings.json`の内部計算で自動調整されます
+* Provide images for all required channels, types, and parts.
+* Use relative paths from the project root.
+* Missing images will cause errors at application startup.
+* The widths of left/right bar parts are auto-adjusted by calculations inside `settings.json`.
 
+---
 
+## Karaoke subtitle generation settings: `lyrics_settings/settings_default.json`
 
+### General subtitle settings
 
-## カラオケ字幕生成の設定：lyrics_settings/settings_default.json
+| Variable                                  | Type         | Description                                                                                |
+| ----------------------------------------- | ------------ | ------------------------------------------------------------------------------------------ |
+| `GENERAL.WIDTH`                           | int          | Image width for one subtitle line                                                          |
+| `GENERAL.HEIGHT`                          | int          | Image height for one subtitle line                                                         |
+| `GENERAL.X_BASE_INIT`                     | int          | Default X coordinate for the first character (origin = top-left of subtitle image)         |
+| `GENERAL.Y_LYRIC`                         | int          | Y coordinate for the lyric (origin = top-left of subtitle image)                           |
+| `GENERAL.Y_RUBY`                          | int          | Y coordinate for ruby/furigana                                                             |
+| `GENERAL.COLOR_FILL_BEFORE`               | int[R,G,B,A] | Text color before wipe                                                                     |
+| `GENERAL.COLOR_STROKE_FILL_BEFORE`        | int[R,G,B,A] | Outline color before wipe                                                                  |
+| `GENERAL.COLOR_FILL_AFTER`                | int[R,G,B,A] | Text color after wipe                                                                      |
+| `GENERAL.COLOR_STROKE_FILL_AFTER`         | int[R,G,B,A] | Outline color after wipe                                                                   |
+| `GENERAL.COLOR_FILL_BEFORE_CHORUS`        | int[R,G,B,A] | Text color before wipe for chorus/response                                                 |
+| `GENERAL.COLOR_STROKE_FILL_BEFORE_CHORUS` | int[R,G,B,A] | Outline color before wipe for chorus/response                                              |
+| `GENERAL.COLOR_FILL_AFTER_CHORUS`         | int[R,G,B,A] | Text color after wipe for chorus/response                                                  |
+| `GENERAL.COLOR_STROKE_FILL_AFTER_CHORUS`  | int[R,G,B,A] | Outline color after wipe for chorus/response                                               |
+| `GENERAL.DISABLE_STROKE_ANTIALIASING`     | bool         | Disable stroke antialiasing (useful to avoid transparent outlines when layering subtitles) |
 
-- 字幕全般の設定
+### Part/chorus mode settings
 
-| 変数名                                     | 型                                                     | 説明                                                 |
-|--------------------------------------------|--------------------------------------------------------|------------------------------------------------------|
-| `GENERAL.WIDTH`                            | int                                                    | 字幕１行分の画像幅                                   |
-| `GENERAL.HEIGHT`                           | int                                                    | 字幕１行分の画像高さ                                 |
-| `GENERAL.X_BASE_INIT`                      | int                                                    | 1文字目のデフォルトX座標（字幕１行分の画像の左上が原点） |
-| `GENERAL.Y_LYRIC`                          | int                                                    | 歌詞のY座標（字幕１行分の画像の左上が原点）           |
-| `GENERAL.Y_RUBY`                           | int                                                    | ルビのY座標（字幕１行分の画像の左上が原点）           |
-| `GENERAL.COLOR_FILL_BEFORE`                | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ前の文字色                                     |
-| `GENERAL.COLOR_STROKE_FILL_BEFORE`         | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ前の縁色                                       |
-| `GENERAL.COLOR_FILL_AFTER`                 | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ後の文字色                                     |
-| `GENERAL.COLOR_STROKE_FILL_AFTER`          | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ後の縁色                                       |
-| `GENERAL.COLOR_FILL_BEFORE_CHORUS`         | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ前の文字色（合いの手、コーラス用）               |
-| `GENERAL.COLOR_STROKE_FILL_BEFORE_CHORUS`  | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ前の縁色（合いの手、コーラス用）                 |
-| `GENERAL.COLOR_FILL_AFTER_CHORUS`          | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ後の文字色（合いの手、コーラス用）               |
-| `GENERAL.COLOR_STROKE_FILL_AFTER_CHORUS`   | int[R(0-255), G(0-255), B(0-255), A(0-255)]            | ワイプ後の縁色（合いの手、コーラス用）                 |
-| `GENERAL.DISABLE_STROKE_ANTIALIASING`      | bool                                                   | 字幕の縁のアンチエイリアシングを無効にする（字幕を重ねた時の縁の透け対策）|
+| Variable                                | Type               | Description                               |
+| --------------------------------------- | ------------------ | ----------------------------------------- |
+| `GENERAL.CHANGE_TO_CHORUS_STR`          | str[]              | Strings that trigger chorus/response mode |
+| `GENERAL.CHANGE_TO_MAIN_STR`            | str[]              | Strings that return to main mode          |
+| `GENERAL.CHANGE_TO_PART_STR`            | str[]              | Strings that trigger part-mode            |
+| `GENERAL.PART_ICON`                     | str[]              | List of paths for part icons              |
+| `GENERAL.PART_ICON_HEIGHT`              | int                | Height of part icon                       |
+| `GENERAL.PART_ICON_OFFSET_X`            | int                | X offset for part icon                    |
+| `GENERAL.PART_ICON_OFFSET_Y`            | int                | Y offset for part icon                    |
+| `GENERAL.PART_ICON_MARGIN_X`            | int                | X margin for part icon                    |
+| `GENERAL.COLOR_FILL_BEFORE_PART`        | list[int[R,G,B,A]] | Text colors (before wipe) for part mode   |
+| `GENERAL.COLOR_STROKE_FILL_BEFORE_PART` | list[int[R,G,B,A]] | Stroke colors (before wipe) for part mode |
+| `GENERAL.COLOR_FILL_AFTER_PART`         | list[int[R,G,B,A]] | Text colors (after wipe) for part mode    |
+| `GENERAL.COLOR_STROKE_FILL_AFTER_PART`  | list[int[R,G,B,A]] | Stroke colors (after wipe) for part mode  |
 
+### Subtitle display settings
 
-- 合いの手、パート分けモード用字幕設定
+| Variable                                 | Type               | Description                                      |
+| ---------------------------------------- | ------------------ | ------------------------------------------------ |
+| `GENERAL.DISPLAY_BEFORE_TIME`            | int (units: 10 ms) | Time to start showing text before wipe           |
+| `GENERAL.DISPLAY_AFTER_TIME`             | int (units: 10 ms) | Residual time to show text after wipe            |
+| `GENERAL.DISPLAY_CONNECT_THRESHOLD_TIME` | int (units: 10 ms) | Threshold to judge continuous subtitle switching |
+| `GENERAL.PROJECT_WIDTH`                  | int (px)           | Target video width                               |
+| `GENERAL.PROJECT_HEIGHT`                 | int (px)           | Target video height                              |
+| `GENERAL.PROJECT_MARGIN_X`               | int (px)           | X margin from left edge for subtitles            |
+| `GENERAL.PROJECT_LYRIC_X_OVERLAP_FACTOR` | float              | Overlap factor when centering multi-line lyrics  |
+| `GENERAL.PROJECT_Y_0_LYRIC`              | int (px)           | Y coordinate for line 1 lyrics                   |
+| `GENERAL.PROJECT_Y_1_LYRIC`              | int (px)           | Y coordinate for line 2 lyrics                   |
+| `GENERAL.PROJECT_Y_2_LYRIC`              | int (px)           | Y coordinate for line 3 lyrics                   |
+| `GENERAL.PROJECT_Y_3_LYRIC`              | int (px)           | Y coordinate for line 4 lyrics                   |
+| `GENERAL.PROJECT_Y_0_RUBY`               | int (px)           | Y coordinate for line 1 ruby                     |
+| `GENERAL.PROJECT_Y_1_RUBY`               | int (px)           | Y coordinate for line 2 ruby                     |
+| `GENERAL.PROJECT_Y_2_RUBY`               | int (px)           | Y coordinate for line 3 ruby                     |
+| `GENERAL.PROJECT_Y_3_RUBY`               | int (px)           | Y coordinate for line 4 ruby                     |
 
-| 変数名                                     | 型                                                    | 説明                                                 |
-|--------------------------------------------|-------------------------------------------------------|------------------------------------------------------|
-| `GENERAL.CHANGE_TO_CHORUS_STR`             | str[]                                                 | 合いの手、コーラスモードに移行する対象文字リスト     |
-| `GENERAL.CHANGE_TO_MAIN_STR`               | str[]                                                 | 合いの手、コーラスに移行する対象文字リスト           |
-| `GENERAL.CHANGE_TO_PART_STR`               | str[]                                                 | パート分けモードに移行する対象文字リスト             |
-| `GENERAL.PART_ICON`                        | str[]                                                 | パート分け表示のアイコン画像のパスリスト             |
-| `GENERAL.PART_ICON_HEIGHT`                 | int                                                   | パート分けアイコン画像の高さ                         |
-| `GENERAL.PART_ICON_OFFSET_X`               | int                                                   | パート分けアイコン画像のX座標オフセット              |
-| `GENERAL.PART_ICON_OFFSET_Y`               | int                                                   | パート分けアイコン画像のY座標オフセット              |
-| `GENERAL.PART_ICON_MARGIN_X`               | int                                                   | パート分けアイコン画像のX方向余白                    |
-| `GENERAL.COLOR_FILL_BEFORE_PART`           | list[int[R(0-255), G(0-255), B(0-255), A(0-255)]]     | パート分けモード用ワイプ前の文字色リスト             |
-| `GENERAL.COLOR_STROKE_FILL_BEFORE_PART`    | list[int[R(0-255), G(0-255), B(0-255), A(0-255)]]     | パート分けモード用ワイプ前の縁色リスト               |
-| `GENERAL.COLOR_FILL_AFTER_PART`            | list[int[R(0-255), G(0-255), B(0-255), A(0-255)]]     | パート分けモード用ワイプ後の文字色リスト             |
-| `GENERAL.COLOR_STROKE_FILL_AFTER_PART`     | list[int[R(0-255), G(0-255), B(0-255), A(0-255)]]     | パート分けモード用ワイプ後の縁色リスト               |
+### Lyric settings (`LYRIC.*`)
 
+(Chorus/parenthetical lyrics can use `LYRIC_CHORUS.*` overrides.)
 
-- 字幕表示関連の設定
+| Variable                                  | Type        | Description                                               |
+| ----------------------------------------- | ----------- | --------------------------------------------------------- |
+| `LYRIC.FONT_PATH`                         | str         | Path to lyric font                                        |
+| `LYRIC.FONT_SIZE`                         | int (px)    | Font size                                                 |
+| `LYRIC.STROKE_WIDTH`                      | int (px)    | Stroke width for outline                                  |
+| `LYRIC.MARGIN_SPACE`                      | int (px)    | Margin for half-width spaces                              |
+| `LYRIC.MARGIN_HALF`                       | int (px)    | Margin for half-width characters                          |
+| `LYRIC.MARGIN_FULL`                       | int (px)    | Margin for full-width characters                          |
+| `LYRIC.TEXT_WIDTH_MIN`                    | int (px)    | Minimum character width                                   |
+| `LYRIC.Y_DRAW_OFFSET`                     | int (px)    | Y offset to correct font drawing alignment                |
+| `LYRIC.ADJUST_WIPE_SPEED_THRESHOLD_S`     | float (sec) | Threshold time to adjust wipe speed between time tags     |
+| `LYRIC.ADJUST_WIPE_SPEED_DIVISION_POINTS` | float[]     | Relative division points for wipe X coordinates           |
+| `LYRIC.ADJUST_WIPE_SPEED_DIVISION_TIMES`  | float[]     | Relative division points for wipe times                   |
+| `LYRIC.SYNC_WIPE_WITH_RUBY`               | bool        | If ruby has per-character wipes, sync lyric wipes to ruby |
 
-| 変数名                                         | 型                                      | 説明                                              |
-|------------------------------------------------|-----------------------------------------|---------------------------------------------------|
-| `GENERAL.DISPLAY_BEFORE_TIME`                  | int(単位：10ミリ秒)                     | ワイプ前字幕表示開始時間                          |
-| `GENERAL.DISPLAY_AFTER_TIME`                   | int(単位：10ミリ秒)                     | ワイプ後字幕表示残存時間                          |
-| `GENERAL.DISPLAY_CONNECT_THRESHOLD_TIME`       | int(単位：10ミリ秒)                     | 字幕連続切り替え判定閾値時間                      |
-| `GENERAL.PROJECT_WIDTH`                        | int(単位：ピクセル)                     | プロジェクトの動画幅                        |
-| `GENERAL.PROJECT_HEIGHT`                       | int(単位：ピクセル)                     | プロジェクトの動画高さ                      |
-| `GENERAL.PROJECT_MARGIN_X`                     | int(単位：ピクセル)                     | 動画左端からのX座標字幕余白                       |
-| `GENERAL.PROJECT_LYRIC_X_OVERLAP_FACTOR`       | float                                   | 多段歌詞の中央寄せ時の重なり具合                 |
-| `GENERAL.PROJECT_Y_0_LYRIC`                    | int(単位：ピクセル)                     | 1段目の歌詞Y座標                                 |
-| `GENERAL.PROJECT_Y_1_LYRIC`                    | int(単位：ピクセル)                     | 2段目の歌詞Y座標                                 |
-| `GENERAL.PROJECT_Y_2_LYRIC`                    | int(単位：ピクセル)                     | 3段目の歌詞Y座標                                 |
-| `GENERAL.PROJECT_Y_3_LYRIC`                    | int(単位：ピクセル)                     | 4段目の歌詞Y座標                                 |
-| `GENERAL.PROJECT_Y_0_RUBY`                     | int(単位：ピクセル)                     | 1段目のルビY座標                                 |
-| `GENERAL.PROJECT_Y_1_RUBY`                     | int(単位：ピクセル)                     | 2段目のルビY座標                                 |
-| `GENERAL.PROJECT_Y_2_RUBY`                     | int(単位：ピクセル)                     | 3段目のルビY座標                                 |
-| `GENERAL.PROJECT_Y_3_RUBY`                     | int(単位：ピクセル)                     | 4段目のルビY座標                                 |
+### Ruby settings (`RUBY.*`)
 
+(Chorus ruby can use `RUBY_CHORUS.*` overrides.)
 
-- 歌詞字幕の設定`LYRIC.XXX`
-  - コーラス字幕(合いの手など括弧で囲まれた歌詞)は`LYRIC_CHORUS.XXX`で専用パラメータを指定できます。
+| Variable                                 | Type        | Description                                     |
+| ---------------------------------------- | ----------- | ----------------------------------------------- |
+| `RUBY.FONT_PATH`                         | str         | Path to ruby font                               |
+| `RUBY.FONT_SIZE`                         | int (px)    | Font size                                       |
+| `RUBY.STROKE_WIDTH`                      | int (px)    | Stroke width                                    |
+| `RUBY.MARGIN_SPACE`                      | int (px)    | Margin for half-width spaces                    |
+| `RUBY.MARGIN_HALF`                       | int (px)    | Margin for half-width characters                |
+| `RUBY.MARGIN_FULL`                       | int (px)    | Margin for full-width characters                |
+| `RUBY.TEXT_WIDTH_MIN`                    | int (px)    | Minimum character width                         |
+| `RUBY.Y_DRAW_OFFSET`                     | int (px)    | Y offset to correct drawing alignment           |
+| `RUBY.ADJUST_WIPE_SPEED_THRESHOLD_S`     | float (sec) | Threshold to adjust wipe speed                  |
+| `RUBY.ADJUST_WIPE_SPEED_DIVISION_POINTS` | float[]     | Relative division points for wipe X coordinates |
+| `RUBY.ADJUST_WIPE_SPEED_DIVISION_TIMES`  | float[]     | Relative division points for wipe times         |
 
-| 変数名                                         | 型                                      | 説明                                              |
-|------------------------------------------------|-----------------------------------------|---------------------------------------------------|
-| `LYRIC.FONT_PATH`                              | str                                     | フォントパス                                      |
-| `LYRIC.FONT_SIZE`                              | int(単位：ピクセル)                     | フォントサイズ                                    |
-| `LYRIC.STROKE_WIDTH`                           | int(単位：ピクセル)                     | 字幕の縁取り幅                                    |
-| `LYRIC.MARGIN_SPACE`                           | int(単位：ピクセル)                     | 半角スペースの余白                                |
-| `LYRIC.MARGIN_HALF`                            | int(単位：ピクセル)                     | 半角文字の余白                                    |
-| `LYRIC.MARGIN_FULL`                            | int(単位：ピクセル)                     | 全角文字の余白                                    |
-| `LYRIC.TEXT_WIDTH_MIN`                         | int(単位：ピクセル)                     | 最小文字幅                                        |
-| `LYRIC.Y_DRAW_OFFSET`                          | int(単位：ピクセル)                     | 文字描画時のY座標オフセット（フォントによるずれを補正）       |
-| `LYRIC.ADJUST_WIPE_SPEED_THRESHOLD_S`          | float(単位：秒)                       | タイムタグ間のワイプ速度を調整する秒数の閾値                |
-| `LYRIC.ADJUST_WIPE_SPEED_DIVISION_POINTS`      | float[]                             | ワイプＸ座標の始点・終点に対する相対分割リスト             |
-| `LYRIC.ADJUST_WIPE_SPEED_DIVISION_TIMES`       | float[]                             | ワイプ時間の始点・終点に対する相対分割リスト                |
-| `LYRIC.SYNC_WIPE_WITH_RUBY`                    | bool                                | ルビに文字ごとのワイプが定義されている場合に歌詞もワイプを同期する  |
+---
 
+### About `ADJUST_WIPE_SPEED_XXX` parameters
 
-- ルビ字幕の設定`RUBY.XXX`
-  - コーラス字幕(合いの手など括弧で囲まれた歌詞)は`RUBY_CHORUS.XXX`で専用パラメータを指定できます。
+* These parameters adjust wipe speed behavior when the time between time-tags is large (e.g., long tones) and a slow wipe would otherwise occur.
+* They take effect when the interval to the next time-tag (in seconds) exceeds `ADJUST_WIPE_SPEED_THRESHOLD_S`.
 
-| 変数名                                         | 型                                      | 説明                                              |
-|------------------------------------------------|-----------------------------------------|---------------------------------------------------|
-| `RUBY.FONT_PATH`                               | str                                     | フォントパス                                      |
-| `RUBY.FONT_SIZE`                               | int(単位：ピクセル)                     | フォントサイズ                                    |
-| `RUBY.STROKE_WIDTH`                            | int(単位：ピクセル)                     | 字幕の縁取り幅                                    |
-| `RUBY.MARGIN_SPACE`                            | int(単位：ピクセル)                     | 半角スペースの余白                                |
-| `RUBY.MARGIN_HALF`                             | int(単位：ピクセル)                     | 半角文字の余白                                    |
-| `RUBY.MARGIN_FULL`                             | int(単位：ピクセル)                     | 全角文字の余白                                    |
-| `RUBY.TEXT_WIDTH_MIN`                          | int(単位：ピクセル)                     | 最小文字幅                                        |
-| `RUBY.Y_DRAW_OFFSET`                           | int(単位：ピクセル)                     | 文字描画時のY座標オフセット（フォントによるずれを補正）       |
-| `RUBY.ADJUST_WIPE_SPEED_THRESHOLD_S`          | float(単位：秒)                       | タイムタグ間のワイプ速度を調整する秒数の閾値                |
-| `RUBY.ADJUST_WIPE_SPEED_DIVISION_POINTS`      | float[]                             | ワイプＸ座標の始点・終点に対する相対分割リスト             |
-| `RUBY.ADJUST_WIPE_SPEED_DIVISION_TIMES`       | float[]                             | ワイプ時間の始点・終点に対する相対分割リスト                |
-
-
-### ADJUST_WIPE_SPEED_XXXパラメータの挙動について
-
-- これらのパラメータは、ロングトーン等でタイムタグ間の時間が大きく、”ゆっくりワイプ”する際のワイプ速度の挙動を調整するためのものです。
-- 次のタイムタグまでの時間（秒）が`ADJUST_WIPE_SPEED_THRESHOLD_S`を超えると発動します。
-
-![ワイプ速度の調整](./images/ui/ADJUST_WIPE_SPEED.jpg)
+![Wipe speed adjustment](./images/ui/ADJUST_WIPE_SPEED.jpg)
