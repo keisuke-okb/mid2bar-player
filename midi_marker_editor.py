@@ -7,6 +7,8 @@ import customtkinter as ctk
 import mido
 import pygame
 
+from tools import resource_path
+
 # -------------------------
 # Tempo map utility
 # -------------------------
@@ -172,6 +174,8 @@ class MidiMarkerEditor(ctk.CTk):
         self.geometry("1000x500")
         ctk.set_appearance_mode("system")
         ctk.set_default_color_theme("dark-blue")
+        icon_path = resource_path("images/ui/MID2BAR.ico")
+        self.iconbitmap(icon_path)
 
         # state
         self.mid = None

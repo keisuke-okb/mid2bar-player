@@ -19,7 +19,7 @@
         "assets_json_path": "画像素材設定",
         "video_shuffle": "背景動画をランダム再生",
         "enable_mic_input": "マイク入力",
-        "mic_input_channel": "マイク対象チャンネル(0から数える)",
+        "mic_input_channel": "採点MIDIチャンネル(0から)",
         "record": "録画する（ffmpegが必要です）",
         "run": "この設定を反映して再生する",
         "video_paths": "背景動画リスト",
