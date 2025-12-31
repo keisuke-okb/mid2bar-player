@@ -9,7 +9,7 @@ import shutil
 
 from app import Mid2barPlayerApp
 import mid2csv
-from tools import get_lang_text
+from tools import get_lang_text, resource_path
 
 
 # ---------- Helper functions ----------
@@ -36,6 +36,8 @@ class ProjectEditorApp(ctk.CTk):
         super().__init__()
         self.title("MID2BAR-Player Project Editor")
         self.geometry("900x720")
+        icon_path = resource_path("images/ui/MID2BAR.ico")
+        self.iconbitmap(icon_path)
 
         # Variables
         self.editor_lang_var = ctk.StringVar()

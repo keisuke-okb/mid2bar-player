@@ -15,7 +15,7 @@ from video import VideoPlayer
 from particle import Particle, MicInputParticle
 from fft import RealtimeFFTPitchDetector
 from framerecorder import PipeFrameRecorder
-from tools import get_lang_text_app
+from tools import get_lang_text_app, resource_path
 
 vec_mod12 = np.vectorize(tools.mod12_custom)
 
@@ -42,6 +42,9 @@ class Mid2barPlayerApp:
         pygame.init()
         pygame.mixer.init()
         pygame.display.set_caption("MID2BAR-Player")
+        icon_path = resource_path("images/ui/MID2BAR.ico")
+        icon_surface = pygame.image.load(icon_path)
+        pygame.display.set_icon(icon_surface)
 
         self.setting_json_path = settings_json_path
         self.s = settings_loader.load(settings_json_path)

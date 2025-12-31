@@ -1,5 +1,6 @@
 import math
 import os
+import sys
 import json
 import pygame
 import numpy as np
@@ -201,3 +202,13 @@ def point_on_curve_ratio(A, B, progress, curve_strength=0.2, accel=2.0):
     C2 = (mx + nx * offset, my + ny * offset)
 
     return bezier3(A, C1, C2, B, u)
+
+
+def resource_path(relative_path):
+    if hasattr(sys, "_MEIPASS"):
+        # onefile
+        base_path = sys._MEIPASS
+    else:
+        # 通常 / onedir
+        base_path = os.path.dirname(os.path.abspath(sys.argv[0]))
+    return os.path.join(base_path, relative_path)

@@ -2,6 +2,7 @@ import subprocess
 import math
 import pygame
 import os
+import sys
 from datetime import datetime
 from tkinter import messagebox
 
@@ -33,6 +34,7 @@ class PipeFrameRecorder:
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
+                stdin=subprocess.PIPE,
                 text=True,
                 check=True,
             )
@@ -117,7 +119,9 @@ class PipeFrameRecorder:
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
         # launch ffmpeg
-        self.proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+        self.proc = subprocess.Popen(
+            cmd, stdin=subprocess.PIPE, stdout=sys.stdout, stderr=sys.stderr
+        )
 
         self.is_recording = True
         return {
