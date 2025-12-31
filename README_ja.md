@@ -16,6 +16,10 @@
 
 # MID2BAR-Player
 
+<div align="center">
+  <img src="./images/ui/poster.png" alt="Repository Icon" width="500" />
+</div>
+
 従来の「MID2BAR」「LRC2EXO」を統合し、**拡張ルビ規格のLRC歌詞ファイル、マーカー付きのMIDIファイル、音源を用意するだけでカラオケ字幕動画を簡単に作成できるソフトウェア**です。マイク入力を用いた簡易的な採点機能も搭載しています。
 
 できるだけ汎用的な規格のファイルのままカラオケ字幕動画を作成することを目標にしています。
