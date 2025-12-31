@@ -1,0 +1,128 @@
+{
+    "GENERAL": {
+        "WIDTH": 1920,
+        "HEIGHT": 300,
+        "X_BASE_INIT": 50,
+        "Y_LYRIC": 100,
+        "Y_RUBY": 30,
+
+        "COLOR_FILL_BEFORE": [240, 240, 240, 255],
+        "COLOR_STROKE_FILL_BEFORE": [15, 15, 15, 255],
+        "COLOR_FILL_AFTER": [171, 61, 20, 255],
+        "COLOR_STROKE_FILL_AFTER": [240, 240, 240, 255],
+
+        "COLOR_FILL_BEFORE_CHORUS": [15, 15, 15, 255],
+        "COLOR_STROKE_FILL_BEFORE_CHORUS": [240, 240, 240, 255],
+        "COLOR_FILL_AFTER_CHORUS": [15, 15, 15, 255],
+        "COLOR_STROKE_FILL_AFTER_CHORUS": [240, 240, 240, 255],
+
+        "CHANGE_TO_CHORUS_STR": ["(", "＜"],
+        "CHANGE_TO_MAIN_STR": [")", "＞"],
+
+        "CHANGE_TO_PART_STR": ["①", "②", "①②"],
+        "PART_ICON": [
+            "./images/icon/icon1.png",
+            "./images/icon/icon2.png",
+            "./images/icon/icon1_2.png"
+        ],
+        "PART_ICON_HEIGHT": 150,
+        "PART_ICON_OFFSET_X": -10,
+        "PART_ICON_OFFSET_Y": -10,
+        "PART_ICON_MARGIN_X": 30,
+
+        "COLOR_FILL_BEFORE_PART": [
+            [255, 114, 196, 255],
+            [69, 208, 255, 255],
+            [255, 255, 0, 255]
+        ],
+        "COLOR_STROKE_FILL_BEFORE_PART": [
+            [15, 15, 15, 255],
+            [15, 15, 15, 255],
+            [15, 15, 15, 255]
+        ],
+        "COLOR_FILL_AFTER_PART": [
+            [95, 0, 55, 255],
+            [0, 88, 117, 255],
+            [0, 0, 0, 255]
+        ],
+        "COLOR_STROKE_FILL_AFTER_PART": [
+            [240, 240, 240, 255],
+            [240, 240, 240, 255],
+            [240, 240, 240, 255]
+        ],
+
+        "DISPLAY_BEFORE_TIME": 300,
+        "DISPLAY_AFTER_TIME": 35,
+        "DISPLAY_CONNECT_THRESHOLD_TIME": 500,
+        "FADE_TIME": 70,
+
+        "PROJECT_WIDTH": 1920,
+        "PROJECT_HEIGHT": 1080,
+        "PROJECT_FRAMERATE": 60,
+        "PROJECT_MARGIN_X": 30,
+        "PROJECT_LYRIC_X_OVERLAP_FACTOR": 1.1,
+
+        "PROJECT_Y_0_LYRIC": 150,
+        "PROJECT_Y_1_LYRIC": 370,
+        "PROJECT_Y_2_LYRIC": 590,
+        "PROJECT_Y_3_LYRIC": 810,
+
+        "PROJECT_Y_0_RUBY": 158,
+        "PROJECT_Y_1_RUBY": 378,
+        "PROJECT_Y_2_RUBY": 598,
+        "PROJECT_Y_3_RUBY": 818,
+
+        "DISABLE_STROKE_ANTIALIASING": true
+    },
+
+    "LYRIC": {
+        "FONT_PATH": "./fonts/NotoSansJP-Black.ttf",
+        "FONT_SIZE": 100,
+        "STROKE_WIDTH": 10,
+        "MARGIN_SPACE": 30,
+        "MARGIN_HALF": 14,
+        "MARGIN_FULL": 28,
+        "TEXT_WIDTH_MIN": 38,
+        "Y_DRAW_OFFSET": -20,
+        "ADJUST_WIPE_SPEED_THRESHOLD_S": 0.8,
+        "ADJUST_WIPE_SPEED_DIVISION_POINTS": [2.5, 1.0, 1.0, 1.0],
+        "ADJUST_WIPE_SPEED_DIVISION_TIMES": [1.0, 1.5, 2.0, 1.5],
+        "SYNC_WIPE_WITH_RUBY": true
+    },
+    
+    "RUBY": {
+        "FONT_PATH": "./fonts/NotoSansJP-Black.ttf",
+        "FONT_SIZE": 42,
+        "STROKE_WIDTH": 10,
+        "MARGIN_SPACE": 4,
+        "MARGIN_HALF": 8,
+        "MARGIN_FULL": 20,
+        "TEXT_WIDTH_MIN": 5,
+        "Y_DRAW_OFFSET": -10,
+        "ADJUST_WIPE_SPEED_THRESHOLD_S": 0.8,
+        "ADJUST_WIPE_SPEED_DIVISION_POINTS": [2.5, 1.0, 1.0, 1.0],
+        "ADJUST_WIPE_SPEED_DIVISION_TIMES": [1.0, 1.5, 2.0, 1.5]
+    },
+
+    "LYRIC_CHORUS":{
+        "FONT_PATH": "./fonts/NotoSansJP-Black.ttf",
+        "FONT_SIZE": 80,
+        "STROKE_WIDTH": 10,
+        "MARGIN_SPACE": 26,
+        "MARGIN_HALF": 14,
+        "MARGIN_FULL": 28,
+        "TEXT_WIDTH_MIN": 30,
+        "Y_DRAW_OFFSET": 0
+    },
+
+    "RUBY_CHORUS":{
+        "FONT_PATH": "./fonts/NotoSansJP-Black.ttf",
+        "FONT_SIZE": 30,
+        "STROKE_WIDTH": 10,
+        "MARGIN_SPACE": 4,
+        "MARGIN_HALF": 8,
+        "MARGIN_FULL": 20,
+        "TEXT_WIDTH_MIN": 5,
+        "Y_DRAW_OFFSET": 0
+    }
+}

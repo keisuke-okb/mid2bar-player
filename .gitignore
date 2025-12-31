@@ -7,9 +7,14 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+project_bu.json
+project.json
 .Python
 build/
+build.cmd
+recordings/
 develop-eggs/
+lyrics_images/
 dist/
 downloads/
 eggs/
@@ -17,6 +22,8 @@ eggs/
 lib/
 lib64/
 parts/
+old/
+data/
 sdist/
 var/
 wheels/
