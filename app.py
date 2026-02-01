@@ -205,7 +205,7 @@ class Mid2barPlayerApp:
                 <= -self.pitch_range / 2
             ):
                 note["effects"].append("down")
-            if note["end"] - note["start"] >= self.note_length_thre:
+            if note["end"] - note["start"] > self.note_length_thre:
                 note["effects"].append("long")
 
         if (self.max_pitch - self.min_pitch) < self.s.DISPLAY_PITCH_RANGE_MIN:
@@ -1052,10 +1052,20 @@ class Mid2barPlayerApp:
                         passed_time = self.current_time - self.s.LAG_TIME - note["end"]
                         if passed_time >= 0:
                             # Particles for passed notes
-                            if random.random() < self.s.BAR_PASSED_PARTICLE_RAND:
-                                px = random.uniform(note["x_start"], note["x_end"])
-                                py = note["y"]
-                                self.particles.append(Particle(px, py))
+                            for _ in range(
+                                max(
+                                    int(
+                                        (note["x_end"] - note["x_start"])
+                                        / self.s.SCREEN_FPS
+                                        * self.s.BAR_PASSED_PARTICLE_RAND
+                                    ),
+                                    1,
+                                )
+                            ):
+                                if random.random() < self.s.BAR_PASSED_PARTICLE_RAND:
+                                    px = random.uniform(note["x_start"], note["x_end"])
+                                    py = note["y"]
+                                    self.particles.append(Particle(px, py))
 
                             # Impact glow effects
                             if passed_time <= self.s.BAR_GLOW_DURATION:
