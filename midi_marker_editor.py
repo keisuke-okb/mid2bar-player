@@ -834,7 +834,7 @@ class MidiMarkerEditor(ctk.CTk):
             if d < nearest_d:
                 nearest_d = d
                 nearest = m
-        if nearest is not None and nearest_d <= 0.3:
+        if nearest is not None and nearest_d <= 0.1:
             # delete
             self.markers.remove(nearest)
             self._refresh_marker_list()
