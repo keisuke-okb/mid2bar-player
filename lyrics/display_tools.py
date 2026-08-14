@@ -9,6 +9,54 @@ def convert_x(x, settings):
     return int(x - settings.GENERAL.PROJECT_WIDTH // 2)
 
 
+def ends_with_fullwidth_space(data):
+    return "".join("".join(units) for units in data["lyrics"]).endswith("　")
+
+
+def get_three_line_space_layout(data, index, settings):
+    """Return the B/C/D origins for the special three-line layout."""
+    if (
+        index < 0
+        or index + 2 >= len(data)
+        or data[index]["block_length"] != 3
+        or data[index]["block_current"] != 1
+        or not ends_with_fullwidth_space(data[index])
+    ):
+        return None
+
+    b_data = data[index]
+    c_data = data[index + 1]
+    d_data = data[index + 2]
+    cd_margin_x = calc_margin_x(
+        settings.GENERAL.PROJECT_WIDTH,
+        c_data["x_length"],
+        d_data["x_length"],
+        settings,
+    )
+    c_x = settings.GENERAL.PROJECT_MARGIN_X + cd_margin_x
+    d_x = (
+        settings.GENERAL.PROJECT_WIDTH
+        - settings.GENERAL.PROJECT_MARGIN_X
+        - d_data["x_length"]
+        - cd_margin_x
+    )
+
+    normal_b_margin_x = calc_margin_x(
+        settings.GENERAL.PROJECT_WIDTH,
+        c_data["x_length"],
+        b_data["x_length"],
+        settings,
+    )
+    normal_b_x = settings.GENERAL.PROJECT_MARGIN_X + normal_b_margin_x
+    b_text_end = b_data["x_end_lyric_without_trailing_fullwidth_space"]
+    d_text_end = d_data["x_end_lyric_without_trailing_fullwidth_space"]
+    b_x = c_x
+    if normal_b_x + b_text_end > d_x + d_text_end:
+        b_x = settings.GENERAL.PROJECT_MARGIN_X
+
+    return b_x, c_x, d_x
+
+
 def divide_segments(x_start, x_end, division_points):
     total_ratio = sum(division_points)
     if total_ratio == 0:
@@ -59,6 +107,10 @@ def generate_lyrics_data(data, data_r, settings):
                     settings,
                 )
                 x = settings.GENERAL.PROJECT_MARGIN_X + overlap_margin_x
+
+                special_layout = get_three_line_space_layout(data, i, settings)
+                if special_layout is not None:
+                    x = special_layout[0]
             elif block_length == 4:
                 overlap_margin_x = calc_margin_x(
                     settings.GENERAL.PROJECT_WIDTH,
@@ -84,23 +136,31 @@ def generate_lyrics_data(data, data_r, settings):
                 )
                 x = settings.GENERAL.PROJECT_MARGIN_X + overlap_margin_x
             elif block_length == 3:
-                overlap_margin_x = calc_margin_x(
-                    settings.GENERAL.PROJECT_WIDTH,
-                    data[i - 1]["x_length"],
-                    dc["x_length"],
-                    settings,
-                )
-                x = (
-                    settings.GENERAL.PROJECT_WIDTH
-                    - settings.GENERAL.PROJECT_MARGIN_X
-                    - dc["x_length"]
-                    - overlap_margin_x
-                )
+                special_layout = get_three_line_space_layout(data, i - 1, settings)
+                if special_layout is not None:
+                    x = special_layout[1]
+                else:
+                    overlap_margin_x = calc_margin_x(
+                        settings.GENERAL.PROJECT_WIDTH,
+                        data[i - 1]["x_length"],
+                        dc["x_length"],
+                        settings,
+                    )
+                    x = (
+                        settings.GENERAL.PROJECT_WIDTH
+                        - settings.GENERAL.PROJECT_MARGIN_X
+                        - dc["x_length"]
+                        - overlap_margin_x
+                    )
 
         elif display_row == 3:
             y = settings.GENERAL.PROJECT_Y_3_LYRIC
             if block_length == 1 or block_length == 3:
-                x = settings.GENERAL.PROJECT_WIDTH / 2 - dc["x_length"] / 2
+                special_layout = get_three_line_space_layout(data, i - 2, settings)
+                if block_length == 3 and special_layout is not None:
+                    x = special_layout[2]
+                else:
+                    x = settings.GENERAL.PROJECT_WIDTH / 2 - dc["x_length"] / 2
             elif block_length == 2 or block_length == 4:
                 overlap_margin_x = calc_margin_x(
                     settings.GENERAL.PROJECT_WIDTH,

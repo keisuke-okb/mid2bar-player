@@ -206,6 +206,8 @@ def draw_lyric_image_with_ruby(
     x_end_lyric = []
     x_start_ruby = []
     x_end_ruby = []
+    x_end_lyric_without_trailing_fullwidth_space = None
+    full_lyric = "".join("".join(units) for units in data["lyrics"])
 
     for i, (lyric_units, ruby_units) in enumerate(zip(data["lyrics"], data["rubys"])):
         lyric = "".join(lyric_units)
@@ -284,6 +286,7 @@ def draw_lyric_image_with_ruby(
             x_base = _x_lyric + new_width + settings.GENERAL.PART_ICON_MARGIN_X
             x_end_lyric.append([int(_x_lyric + new_width)])
             x_end_ruby.append([int(_x_lyric + new_width)])
+            x_end_lyric_without_trailing_fullwidth_space = x_end_lyric[-1][-1]
 
             # change color
             COLOR_FILL_BEFORE_CURRENT = tuple(
@@ -358,6 +361,10 @@ def draw_lyric_image_with_ruby(
                 stroke_fill=COLOR_STROKE_FILL_AFTER_CURRENT,
             )
             _x_lyric += _width + _margin
+            if t != "　":
+                x_end_lyric_without_trailing_fullwidth_space = int(
+                    _x_lyric - _margin + getattr(settings, lyric_cat).STROKE_WIDTH
+                )
 
         x_end_lyric.append(
             [int(_x_lyric - _margin + getattr(settings, lyric_cat).STROKE_WIDTH)]
@@ -443,6 +450,14 @@ def draw_lyric_image_with_ruby(
     image_2.save(output_path_2, "PNG")
     data["x_start_lyric"] = x_start_lyric
     data["x_end_lyric"] = x_end_lyric
+    if full_lyric.endswith("　"):
+        data["x_end_lyric_without_trailing_fullwidth_space"] = (
+            x_end_lyric_without_trailing_fullwidth_space
+            if x_end_lyric_without_trailing_fullwidth_space is not None
+            else x_start_lyric[0][0]
+        )
+    else:
+        data["x_end_lyric_without_trailing_fullwidth_space"] = x_end_lyric[-1][-1]
     data["x_start_ruby"] = x_start_ruby
     data["x_end_ruby"] = x_end_ruby
     data["x_length"] = (

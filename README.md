@@ -111,6 +111,14 @@ Three consecutive lines without blank lines are treated as a single block:
 [00:44:56]新[00:44:56]([00:44:56]あら[00:44:91])[00:44:91]た[00:45:29]な[00:45:66]世[00:45:66]([00:45:66]せ[00:46:07])[00:46:07]界[00:46:07]([00:46:07]かい[00:46:63])[00:46:63]へ[00:47:19]
 ```
 
+For a three-line block, putting a full-width space (U+3000) at the end of the first line (the on-screen B row, counting from the top of the screen (A–D)) aligns B and C on the left and places D on the right. The condition applies when the lyric text between time tags ends with a full-width space, for example (ruby text omitted):
+
+```
+[00:35:29]シャ[00:35:45]イ[00:35:61]ニ[00:35:76]ン[00:35:94]グ[00:36:09]ス[00:36:24]ター[00:36:58]綴[00:36:58]([00:36:58]つづ[00:37:30])[00:37:30]れ[00:37:49]ば　[00:37:94]
+```
+
+The trailing full-width space is excluded from character-position calculations. If B is too long and its actual text edge would pass D's right edge, C and D keep their left/right placement and only B is moved to the left side.
+
 ---
 
 ### 2. Insert page/measure markers for pitch-bar display in the melody MIDI

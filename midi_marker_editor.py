@@ -573,7 +573,6 @@ class MidiMarkerEditor(ctk.CTk):
         except Exception as e:
             messagebox.showerror("Save failed", str(e))
 
-
     # -------------------------
     # Audio
     # -------------------------

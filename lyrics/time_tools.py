@@ -38,6 +38,7 @@ def calc_display_time(data, settings):
         previous_singing_start = data[previous_block_start_index]["times"][0][0]
         minimum_start = previous_singing_start + max(0, delay_s) * 1000
         return max(start, minimum_start)
+
     for i in range(len(data)):
         if data[i]["block_length"] == 1:
             display_start_time = (
