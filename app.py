@@ -1392,6 +1392,38 @@ class Mid2barPlayerApp:
     def draw_front(self):
         self.screen.blit(self.assets.project_front, (0, 0))
 
+    def _blit_lyric_segment(self, lyric, image, x, y, left, right, alpha=None):
+        """Draw one horizontal, non-overlapping segment of a lyric image."""
+        image_width = image.get_width()
+        image_height = image.get_height()
+        clip_up = lyric["clip_up"]
+        clip_bottom = lyric["clip_bottom"]
+        visible_top = max(0, int(clip_up))
+        visible_bottom = min(image_height, image_height - int(clip_bottom))
+        left = max(0, min(image_width, int(left)))
+        right = max(left, min(image_width, int(right)))
+
+        if right <= left or visible_bottom <= visible_top:
+            return
+
+        crop_rect = pygame.Rect(
+            left,
+            visible_top,
+            right - left,
+            visible_bottom - visible_top,
+        )
+        position = (x + left, y + visible_top)
+        if alpha is None:
+            self.screen.blit(image, position, crop_rect)
+        else:
+            tools.blit_with_alpha(
+                self.screen,
+                image,
+                position,
+                crop_rect,
+                alpha,
+            )
+
     def draw_lyrics(self):
         for i in range(len(self.lyrics)):
             if "fade_in" in self.lyrics[i].keys():
@@ -1419,12 +1451,13 @@ class Mid2barPlayerApp:
                 fadeout_alpha = None
 
             for typ in self.lyrics_types:
-                start = self.lyrics[i][typ]["start"]
-                end = self.lyrics[i][typ]["end"]
-                x = self.lyrics[i][typ]["x"]
-                y = self.lyrics[i][typ]["y"]
+                lyric = self.lyrics[i][typ]
+                start = lyric["start"]
+                end = lyric["end"]
+                x = lyric["x"]
+                y = lyric["y"]
                 if start <= self.current_time < end:
-                    for x_wipes in self.lyrics[i][typ]["x_wipes"]:
+                    for x_wipes in lyric["x_wipes"]:
                         _start, _end = x_wipes[0], x_wipes[1]
                         if _start <= self.current_time < _end:
                             if _start == _end:
@@ -1433,45 +1466,78 @@ class Mid2barPlayerApp:
                                 prog = (self.current_time - _start) / (_end - _start)
                                 _clip_x = (x_wipes[3] - x_wipes[2]) * prog + x_wipes[2]
 
-                            _clip_x = np.floor(_clip_x)
-                            crop_rect = pygame.Rect(
-                                _clip_x,
-                                self.lyrics[i][typ]["clip_up"],
-                                self.lyrics[i][typ]["img"].get_width() - _clip_x,
-                                self.lyrics[i][typ]["img"].get_height()
-                                - self.lyrics[i][typ]["clip_up"]
-                                - self.lyrics[i][typ]["clip_bottom"],
-                            )
+                            _clip_x = int(np.floor(_clip_x))
                             if fadein_alpha is None and fadeout_alpha is None:
-                                self.screen.blit(
-                                    self.lyrics[i][typ]["img"],
-                                    (x + _clip_x, y + self.lyrics[i][typ]["clip_up"]),
-                                    crop_rect,
-                                )
+                                if "front" in typ:
+                                    # Join the two color states at the wipe boundary.
+                                    # The segments never overlap, so antialiased edges
+                                    # cannot reveal the image underneath.
+                                    background_typ = typ.replace("front", "background")
+                                    background_lyric = self.lyrics[i][background_typ]
+                                    self._blit_lyric_segment(
+                                        background_lyric,
+                                        background_lyric["img"],
+                                        x,
+                                        y,
+                                        0,
+                                        _clip_x,
+                                    )
+                                    self._blit_lyric_segment(
+                                        lyric,
+                                        lyric["img"],
+                                        x,
+                                        y,
+                                        _clip_x,
+                                        lyric["img"].get_width(),
+                                    )
+                                elif "background" in typ:
+                                    front_typ = typ.replace("background", "front")
+                                    front_lyric = self.lyrics[i][front_typ]
+                                    front_is_active = (
+                                        front_lyric["start"]
+                                        <= self.current_time
+                                        < front_lyric["end"]
+                                    )
+                                    if not front_is_active:
+                                        self._blit_lyric_segment(
+                                            lyric,
+                                            lyric["img"],
+                                            x,
+                                            y,
+                                            0,
+                                            lyric["img"].get_width(),
+                                        )
+                                else:
+                                    self._blit_lyric_segment(
+                                        lyric,
+                                        lyric["img"],
+                                        x,
+                                        y,
+                                        _clip_x,
+                                        lyric["img"].get_width(),
+                                    )
 
                             elif fadein_alpha is not None:
                                 if "front" in typ:
-                                    tools.blit_with_alpha(
-                                        self.screen,
-                                        self.lyrics[i][typ]["img"],
-                                        (
-                                            x + _clip_x,
-                                            y + self.lyrics[i][typ]["clip_up"],
-                                        ),
-                                        crop_rect,
+                                    self._blit_lyric_segment(
+                                        lyric,
+                                        lyric["img"],
+                                        x,
+                                        y,
+                                        _clip_x,
+                                        lyric["img"].get_width(),
                                         fadein_alpha,
                                     )
 
                             elif fadeout_alpha is not None:
                                 if "background" in typ:
-                                    tools.blit_with_alpha(
-                                        self.screen,
-                                        self.lyrics[i][typ]["img"],
-                                        (
-                                            x + _clip_x,
-                                            y + self.lyrics[i][typ]["clip_up"],
-                                        ),
-                                        crop_rect,
+                                    self._blit_lyric_segment(
+                                        lyric,
+                                        lyric["img"],
+                                        x,
+                                        y,
+                                        _clip_x,
+                                        lyric["img"].get_width(),
                                         fadeout_alpha,
                                     )
 
