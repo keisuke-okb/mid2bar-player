@@ -69,6 +69,7 @@ class Mid2barPlayerApp:
         self.screen_scale = 1.0
         self.screen_offset_x = 0
         self.screen_offset_y = 0
+        self.display_lyrics = True
 
         self.bar_auto_play = self.s.BAR_AUTO_PLAY
         self.enable_mic_input = enable_mic_input
@@ -181,7 +182,7 @@ class Mid2barPlayerApp:
         self.max_pitch = max(pitches)
         self.pitch_range = self.max_pitch - self.min_pitch
         self.note_length_thre = np.percentile(
-            [n["end"] - n["start"] for n in self.notes], 90
+            [round(n["end"] - n["start"], 2) for n in self.notes], 90
         )
 
         for i, note in enumerate(self.notes):
@@ -1645,7 +1646,8 @@ class Mid2barPlayerApp:
                 self.draw_front()
                 self.draw_now_bar()
                 self.update_particles()
-                self.draw_lyrics()
+                if self.display_lyrics:
+                    self.draw_lyrics()
 
         except Exception as e:
             print(e)
@@ -1750,6 +1752,9 @@ class Mid2barPlayerApp:
 
                     elif event.key == pygame.K_UP:
                         self.add_volume(1)
+
+                    elif event.key == pygame.K_l:
+                        self.display_lyrics = not self.display_lyrics
 
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
