@@ -8,12 +8,18 @@ import lyrics
 
 
 def detect_encoding(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            f.read()
+        return "utf-8"
+    except UnicodeDecodeError:
+        pass
+
     with open(file_path, "rb") as f:
         raw_data = f.read()
-        result = chardet.detect(raw_data)
 
-    encoding = result["encoding"]
-    return encoding
+    result = chardet.detect(raw_data)
+    return result["encoding"]
 
 
 def generate_lyrics(
