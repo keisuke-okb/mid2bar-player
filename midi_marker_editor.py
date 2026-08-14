@@ -493,29 +493,86 @@ class MidiMarkerEditor(ctk.CTk):
         )
         if not save_path:
             return
-        new_mid = mido.MidiFile()
+
+        # preserve original MIDI file type and ticks_per_beat ---
+        new_mid = mido.MidiFile(type=self.mid.type)
         new_mid.ticks_per_beat = self.mid.ticks_per_beat
+
+        # copy original tracks
         for track in self.mid.tracks:
-            new_mid.tracks.append(track.copy())
-        marker_track = mido.MidiTrack()
-        ticks = [
-            self.tempo_map.seconds_to_ticks(m["time"])
-            for m in sorted(self.markers, key=lambda x: x["time"])
-        ]
-        prev = 0
-        for idx, t in enumerate(ticks):
-            delta = t - prev
-            label = sorted(self.markers, key=lambda x: x["time"])[idx]["label"]
-            msg = mido.MetaMessage("marker", text=label or "Marker", time=delta)
-            marker_track.append(msg)
-            prev = t
-        marker_track.append(mido.MetaMessage("end_of_track", time=0))
-        new_mid.tracks.append(marker_track)
+            new_track = mido.MidiTrack()
+            carry_time = 0
+
+            for msg in track:
+                if msg.type == "marker":
+                    carry_time += msg.time
+                    continue
+
+                new_msg = msg.copy(time=msg.time + carry_time)
+                carry_time = 0
+                new_track.append(new_msg)
+
+            new_mid.tracks.append(new_track)
+
+        # --------------------------------------------------
+        # insert markers depending on MIDI type
+        # --------------------------------------------------
+        if self.mid.type == 0:
+            # type 0: must have exactly ONE track
+            track = new_mid.tracks[0]
+
+            # convert to absolute ticks
+            abs_msgs = []
+            tick = 0
+            for msg in track:
+                tick += msg.time
+                abs_msgs.append((tick, msg))
+
+            # add markers
+            for m in self.markers:
+                t = self.tempo_map.seconds_to_ticks(m["time"])
+                abs_msgs.append(
+                    (t, mido.MetaMessage("marker", text=m["label"] or "Marker"))
+                )
+
+            # sort by absolute tick
+            abs_msgs.sort(key=lambda x: x[0])
+
+            # rebuild track with delta times
+            track.clear()
+            prev = 0
+            for t, msg in abs_msgs:
+                msg.time = t - prev
+                track.append(msg)
+                prev = t
+
+        else:
+            # type 1 / type 2: add marker track
+            marker_track = mido.MidiTrack()
+            ticks = [
+                self.tempo_map.seconds_to_ticks(m["time"])
+                for m in sorted(self.markers, key=lambda x: x["time"])
+            ]
+            prev = 0
+            for i, t in enumerate(ticks):
+                label = sorted(self.markers, key=lambda x: x["time"])[i]["label"]
+                marker_track.append(
+                    mido.MetaMessage(
+                        "marker",
+                        text=label or "Marker",
+                        time=t - prev,
+                    )
+                )
+                prev = t
+            marker_track.append(mido.MetaMessage("end_of_track", time=0))
+            new_mid.tracks.append(marker_track)
+
         try:
             new_mid.save(save_path)
             messagebox.showinfo("Saved", f"Saved MIDI with markers to:\n{save_path}")
         except Exception as e:
             messagebox.showerror("Save failed", str(e))
+
 
     # -------------------------
     # Audio
@@ -844,7 +901,7 @@ class MidiMarkerEditor(ctk.CTk):
             label = simpledialog.askstring(
                 "Marker label", "Enter marker label (optional):", parent=self
             )
-            self.markers.append({"time": t, "label": label or ""})
+            self.markers.append({"time": t, "label": label or "Marker"})
             self.markers.sort(key=lambda x: x["time"])
             self._refresh_marker_list()
             self.draw_pianoroll()
