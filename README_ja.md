@@ -532,6 +532,7 @@ bars
 | `GENERAL.DISPLAY_BEFORE_TIME`                  | int(単位：10ミリ秒)                     | ワイプ前字幕表示開始時間                          |
 | `GENERAL.DISPLAY_AFTER_TIME`                   | int(単位：10ミリ秒)                     | ワイプ後字幕表示残存時間                          |
 | `GENERAL.DISPLAY_CONNECT_THRESHOLD_TIME`       | int(単位：10ミリ秒)                     | 字幕連続切り替え判定閾値時間                      |
+| `GENERAL.DISPLAY_BLOCK_START_DELAY_S`          | float(単位：秒)                         | 前ブロックの歌い始めから上段ブロックを表示するまでの最小遅延時間 |
 | `GENERAL.PROJECT_WIDTH`                        | int(単位：ピクセル)                     | プロジェクトの動画幅                        |
 | `GENERAL.PROJECT_HEIGHT`                       | int(単位：ピクセル)                     | プロジェクトの動画高さ                      |
 | `GENERAL.PROJECT_MARGIN_X`                     | int(単位：ピクセル)                     | 動画左端からのX座標字幕余白                       |

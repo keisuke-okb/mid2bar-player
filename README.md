@@ -551,6 +551,7 @@ For multi-part songs you can set different colors/designs per MIDI channel:
 | `GENERAL.DISPLAY_BEFORE_TIME`            | int (units: 10 ms) | Time to start showing text before wipe           |
 | `GENERAL.DISPLAY_AFTER_TIME`             | int (units: 10 ms) | Residual time to show text after wipe            |
 | `GENERAL.DISPLAY_CONNECT_THRESHOLD_TIME` | int (units: 10 ms) | Threshold to judge continuous subtitle switching |
+| `GENERAL.DISPLAY_BLOCK_START_DELAY_S`    | float (seconds) | Minimum delay before an upper-row block appears after the previous block starts singing |
 | `GENERAL.PROJECT_WIDTH`                  | int (px)           | Target video width                               |
 | `GENERAL.PROJECT_HEIGHT`                 | int (px)           | Target video height                              |
 | `GENERAL.PROJECT_MARGIN_X`               | int (px)           | X margin from left edge for subtitles            |

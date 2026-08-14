@@ -18,6 +18,26 @@ def calc_display_time(data, settings):
         list: 各ブロックに追加情報（display_start_time、display_end_time、display_row）を持つ更新済みデータ。
     """
     time_pos = [-1, -1, -1, -1]
+
+    def adjust_block_start_time(index, start, display_row):
+        """Prevent an upper row of a new block from appearing too early."""
+        if index == 0 or data[index]["block_current"] != 1:
+            return start
+
+        previous_index = index - 1
+        previous_block_start_index = (
+            previous_index - data[previous_index]["block_current"] + 1
+        )
+        previous_display_row = 4 - data[previous_index]["block_length"]
+
+        # Only constrain transitions to a block that starts on a higher row.
+        if display_row >= previous_display_row:
+            return start
+
+        delay_s = getattr(settings.GENERAL, "DISPLAY_BLOCK_START_DELAY_S", 0.0) or 0.0
+        previous_singing_start = data[previous_block_start_index]["times"][0][0]
+        minimum_start = previous_singing_start + max(0, delay_s) * 1000
+        return max(start, minimum_start)
     for i in range(len(data)):
         if data[i]["block_length"] == 1:
             display_start_time = (
@@ -32,6 +52,7 @@ def calc_display_time(data, settings):
                 display_start_time = time_pos[3]
             if display_start_time < 0:
                 display_start_time = 0
+            display_start_time = adjust_block_start_time(i, display_start_time, 3)
             display_end_time = (
                 data[i]["times"][-1][0] + settings.GENERAL.DISPLAY_AFTER_TIME
             )
@@ -51,6 +72,7 @@ def calc_display_time(data, settings):
                 #     display_start_time = time_pos[2]
                 if display_start_time < 0:
                     display_start_time = 0
+                display_start_time = adjust_block_start_time(i, display_start_time, 2)
                 display_end_time = (
                     data[i]["times"][-1][0] + settings.GENERAL.DISPLAY_AFTER_TIME
                 )
@@ -93,6 +115,7 @@ def calc_display_time(data, settings):
                 #     display_start_time = time_pos[1]
                 if display_start_time < 0:
                     display_start_time = 0
+                display_start_time = adjust_block_start_time(i, display_start_time, 1)
                 display_end_time = (
                     data[i]["times"][-1][0] + settings.GENERAL.DISPLAY_AFTER_TIME
                 )
@@ -175,6 +198,7 @@ def calc_display_time(data, settings):
                 #     display_start_time = time_pos[0]
                 if display_start_time < 0:
                     display_start_time = 0
+                display_start_time = adjust_block_start_time(i, display_start_time, 0)
                 display_end_time = (
                     data[i]["times"][-1][0] + settings.GENERAL.DISPLAY_AFTER_TIME
                 )
@@ -270,5 +294,11 @@ def calc_display_time(data, settings):
             raise NotImplementedError(
                 f"Not supported block_length: {data[i]['block_length']}"
             )
+
+    # Row-order constraints can delay a short lyric past its natural end.
+    # Never emit an inverted display interval.
+    for entry in data:
+        if entry["display_start_time"] > entry["display_end_time"]:
+            entry["display_start_time"] = entry["display_end_time"]
 
     return data

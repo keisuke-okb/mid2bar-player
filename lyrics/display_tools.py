@@ -344,6 +344,8 @@ def generate_lyrics_data(data, data_r, settings):
             {
                 "lyric": "".join(["".join(l) for l in dc["lyrics"]]),
                 "display_row": display_row,
+                "block_current": dc["block_current"],
+                "block_length": dc["block_length"],
                 "block_start": block_start,
                 "block_end": block_end,
                 "background_main_lyric": background_main_lyric,
@@ -365,7 +367,7 @@ def generate_lyrics_data(data, data_r, settings):
         if current_lyric["display_row"] == 1:
             if i == 0 or lyrics[i - 1]["display_row"] != 0:
                 next_block_start = None
-                for j in range(i + 1, len(lyrics) - 1):
+                for j in range(i + 1, len(lyrics)):
                     if lyrics[j]["display_row"] == 1:
                         next_block_start = lyrics[j]["block_start"]
                         break
@@ -394,7 +396,7 @@ def generate_lyrics_data(data, data_r, settings):
 
             if i == 0 or lyrics[i - 1]["display_row"] != 1:
                 next_block_start = None
-                for j in range(i + 1, len(lyrics) - 1):
+                for j in range(i + 1, len(lyrics)):
                     if lyrics[j]["display_row"] == 2:
                         next_block_start = lyrics[j]["block_start"]
                         break
@@ -424,11 +426,21 @@ def generate_lyrics_data(data, data_r, settings):
                     current_lyric[typ]["x_wipes"][0][0] = start
 
     # フェードイン
+    def is_same_block(start, length):
+        if start + length > len(lyrics):
+            return False
+        return all(
+            lyrics[start + offset]["block_length"] == length
+            and lyrics[start + offset]["block_current"] == offset + 1
+            for offset in range(length)
+        )
+
     i = 0
     while i < len(lyrics):
         if lyrics[i]["display_row"] == 0:  # 4行一斉表示
             if (
-                lyrics[i]["block_start"]
+                is_same_block(i, 4)
+                and lyrics[i]["block_start"]
                 == lyrics[i + 1]["block_start"]
                 == lyrics[i + 2]["block_start"]
                 == lyrics[i + 3]["block_start"]
@@ -444,7 +456,8 @@ def generate_lyrics_data(data, data_r, settings):
         elif lyrics[i]["display_row"] == 1:  # 3行一斉表示
             if (i == 0) or (lyrics[i - 1]["display_row"] != 0):
                 if (
-                    lyrics[i]["block_start"]
+                    is_same_block(i, 3)
+                    and lyrics[i]["block_start"]
                     == lyrics[i + 1]["block_start"]
                     == lyrics[i + 2]["block_start"]
                 ):
@@ -458,7 +471,10 @@ def generate_lyrics_data(data, data_r, settings):
 
         elif lyrics[i]["display_row"] == 2:  # 2行一斉表示
             if (i == 0) or (lyrics[i - 1]["display_row"] != 1):
-                if lyrics[i]["block_start"] == lyrics[i + 1]["block_start"]:
+                if (
+                    is_same_block(i, 2)
+                    and lyrics[i]["block_start"] == lyrics[i + 1]["block_start"]
+                ):
                     for j in range(i, i + 2):
                         lyrics[j]["fade_in"] = {
                             "start": lyrics[j]["block_start"],
@@ -494,7 +510,7 @@ def generate_lyrics_data(data, data_r, settings):
         if lyrics[i]["display_row"] == 3:
             current_block_end = lyrics[i]["block_end"]
             next_block_start = 0
-            for j in range(i + 1, len(lyrics) - 1):
+            for j in range(i + 1, len(lyrics)):
                 if lyrics[j]["display_row"] >= 0:
                     next_block_start = lyrics[j]["block_start"]
                     break
