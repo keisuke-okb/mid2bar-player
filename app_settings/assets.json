@@ -8,6 +8,7 @@
         "long": "images/pitch/long.png"
     },
     "range_gauge": "images/ui/range_gauge.png",
+    "range_gauge_map_color_reference": "images/ui/range_gauge_map_color_reference.png",
     "bars": {
         "0": {
             "normal": {

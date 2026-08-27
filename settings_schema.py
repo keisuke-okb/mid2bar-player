@@ -106,6 +106,17 @@ class SettingsSchema:
     RANGE_GAUGE_W: int = 390
     RANGE_GAUGE_H: int = 23
 
+    # ==== レンジゲージマップ =====
+    RANGE_GAUGE_MAP_POS: Tuple[int, int] = (1000, 354)
+    RANGE_GAUGE_MAP_W: int = 626
+    RANGE_GAUGE_MAP_H: int = 23
+    RANGE_GAUGE_MAP_PAGE_MAX_RADIUS: int = 100
+    RANGE_GAUGE_MAP_PAGE_MARGIN: int = 1
+    RANGE_GAUGE_MAP_BLANK_COLOR: Tuple[int, int, int] = (100, 100, 100)
+    RANGE_GAUGE_MAP_BLINK_COLOR: Tuple[int, int, int] = (255, 255, 255)
+    RANGE_GAUGE_MAP_BLINK_SPEED: float = 0.5
+    RANGE_GAUGE_MAP_BLINK_BORDER: int = 3
+
     # ===== 表示 =====
     PREVIEW_TIME: float = 2.0
     REMAIN_TIME: float = 3.0

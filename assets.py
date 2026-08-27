@@ -42,5 +42,8 @@ class Assets:
             (s.RANGE_GAUGE_W, s.RANGE_GAUGE_H),
         )
 
+        # ========= range gauge map =========
+        self.range_gauge_map_color_reference = raw["range_gauge_map_color_reference"]
+
         # ========= bars =========
         self.bars = raw["bars"]
