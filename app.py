@@ -127,6 +127,7 @@ class Mid2barPlayerApp:
         self.bar_count_particles = []
         self.bar_padding = 100
         self.pages = []
+        self.range_gauge_map_pages = []
         self.page_scores = []
         self.scores = {}
         self.mic_inputs_df = None
@@ -360,6 +361,7 @@ class Mid2barPlayerApp:
 
     def calc_pages(self):
         self.pages = []
+        self.range_gauge_map_pages = []
         for i in range(len(self.separators) - 1):
             start_time = self.separators[i]["time"]
             end_time = self.separators[i + 1]["time"]
@@ -370,6 +372,14 @@ class Mid2barPlayerApp:
                 if start_time - 1e-5 <= n["start"] < end_time
                 and end_time - n["start"] >= 1e-5
             ]
+
+            # Short empty marker sections are not map icons.  Leading and
+            # trailing silence are always retained, as are long interludes.
+            is_blank = len(notes) == 0
+            if not is_blank or duration >= self.s.RANGE_GAUGE_MAP_BLANK_S:
+                self.range_gauge_map_pages.append(
+                    {"start_time": start_time, "end_time": end_time, "notes": notes}
+                )
             if self.s.HIDE_NOW_BAR_WHEN_NO_NOTES and len(notes) == 0:
                 continue
 
@@ -421,9 +431,160 @@ class Mid2barPlayerApp:
                 fade_out_time = self.pages[idx + 1]["fade_in_time"]
             self.pages[idx]["fade_out_time"] = fade_out_time
 
-        for idx in range(len(self.pages)):
-            fade_in_time = max(0, self.pages[idx]["fade_in_time"] - self.s.FADE_TIME)
-            self.pages[idx]["fade_in_time"] = fade_in_time
+        for page in self.pages:
+            page["fade_in_time"] = max(0, page["fade_in_time"] - self.s.FADE_TIME)
+
+        # Always add one leading and one trailing blank icon. Existing empty
+        # edge sections are replaced so they cannot produce duplicate blanks.
+        while self.range_gauge_map_pages and not self.range_gauge_map_pages[0]["notes"]:
+            self.range_gauge_map_pages.pop(0)
+        while self.range_gauge_map_pages and not self.range_gauge_map_pages[-1]["notes"]:
+            self.range_gauge_map_pages.pop()
+        if self.range_gauge_map_pages:
+            first_page = self.range_gauge_map_pages[0]
+            last_page = self.range_gauge_map_pages[-1]
+            self.range_gauge_map_pages.insert(
+                0,
+                {
+                    "start_time": 0.0,
+                    "end_time": first_page["start_time"],
+                    "notes": [],
+                    "synthetic_edge": True,
+                },
+            )
+            self.range_gauge_map_pages.append(
+                {
+                    "start_time": last_page["end_time"],
+                    "end_time": self.song_duration,
+                    "notes": [],
+                    "synthetic_edge": True,
+                }
+            )
+
+        # The map follows every separator page selected above.
+        for idx, page in enumerate(self.range_gauge_map_pages):
+            page["fade_in_time"] = max(0, page["start_time"] - self.s.PREVIEW_TIME)
+            if idx and self.range_gauge_map_pages[idx - 1]["end_time"] > page["fade_in_time"]:
+                page["fade_in_time"] = self.range_gauge_map_pages[idx - 1]["end_time"]
+        for idx, page in enumerate(self.range_gauge_map_pages):
+            page["fade_out_time"] = page["end_time"] + self.s.REMAIN_TIME
+            if idx + 1 < len(self.range_gauge_map_pages):
+                page["fade_out_time"] = min(page["fade_out_time"], self.range_gauge_map_pages[idx + 1]["fade_in_time"])
+        for page in self.range_gauge_map_pages:
+            page["fade_in_time"] = max(0, page["fade_in_time"] - self.s.FADE_TIME)
+
+        # Ensure adjacent blank sections collapse to a single map icon.
+        compact_pages = []
+        for page in self.range_gauge_map_pages:
+            if compact_pages and not page["notes"] and not compact_pages[-1]["notes"]:
+                compact_pages[-1]["end_time"] = page["end_time"]
+                compact_pages[-1]["fade_out_time"] = page["fade_out_time"]
+            else:
+                compact_pages.append(page)
+        self.range_gauge_map_pages = compact_pages
+
+    def draw_range_gauge_map(self):
+        """Draw the complete page map and blink the page at the current time."""
+        pages = self.range_gauge_map_pages
+        if not pages:
+            return
+        ref = self.assets.range_gauge_map_color_reference
+        ref_w = max(1, ref.get_width())
+        x, y = self.s.RANGE_GAUGE_MAP_POS
+        count = len(pages)
+        margin = max(0, self.s.RANGE_GAUGE_MAP_PAGE_MARGIN)
+        page_w = max(1, (self.s.RANGE_GAUGE_MAP_W - margin * (count - 1)) / count)
+        active = next(
+            (i for i, p in enumerate(pages)
+            if p["fade_in_time"] <= self.current_time < p["fade_out_time"]),
+            None,
+        )
+        if active is None:
+            active = next(
+                (i for i, p in enumerate(pages) if self.current_time < p["start_time"]),
+                len(pages) - 1,
+            )
+        on_s = max(self.s.RANGE_GAUGE_MAP_BLINK_ON_S, 0.0)
+        off_s = max(self.s.RANGE_GAUGE_MAP_BLINK_OFF_S, 0.0)
+        cycle_time = max(on_s + off_s, 1e-6)
+        time_in_cycle = self.current_time % cycle_time
+        blink_on = time_in_cycle < on_s
+
+        scale = 4
+
+        # 1ページの幅に最大幅制限を適用
+        actual_page_w = min(page_w, self.s.RANGE_GAUGE_MAP_PAGE_MAX_WIDTH)
+
+        # 全ページを並べたとき全体の描画幅
+        total_pages = len(pages)
+        if total_pages > 0:
+            total_content_w = total_pages * actual_page_w + (total_pages - 1) * margin
+        else:
+            total_content_w = 0
+
+        # 元々想定していた全体の領域幅（本来の page_w を使った全幅）
+        original_total_w = total_pages * page_w + max(0, total_pages - 1) * margin
+
+        # 中央に配置するためのX方向オフセット（開始位置のずらし量）
+        start_offset_x = (original_total_w - total_content_w) / 2
+
+        for i, page in enumerate(pages):
+            notes = page["notes"]
+            if not notes:
+                color = self.s.RANGE_GAUGE_MAP_BLANK_COLOR
+            else:
+                pitches = [n["pitch"] for n in notes]
+                if max(pitches) == self.max_pitch:
+                    px = ref_w - 1
+                elif min(pitches) == self.min_pitch:
+                    px = 0
+                else:
+                    avg = sum(pitches) / len(pitches)
+                    px = round((avg - self.min_pitch) / max(self.pitch_range, 1) * (ref_w - 1))
+                color = ref.get_at((max(0, min(ref_w - 1, px)), ref.get_height() // 2))[:3]
+
+            if i < active:
+                color = (*color[:3], self.s.RANGE_GAUGE_MAP_PAGE_PAST_ALPHA)
+
+            # actual_page_w と start_offset_x を使用して配置
+            rect_x = x + start_offset_x + i * (actual_page_w + margin)
+            rect = pygame.Rect(round(rect_x), round(y), round(actual_page_w), self.s.RANGE_GAUGE_MAP_H)
+            radius = min(self.s.RANGE_GAUGE_MAP_PAGE_MAX_RADIUS, rect.width // 2, rect.height // 2)
+
+            # 本体描画
+            sub_w, sub_h = rect.width * scale, rect.height * scale
+            sub_surface = pygame.Surface((sub_w, sub_h), pygame.SRCALPHA)
+            sub_rect = pygame.Rect(0, 0, sub_w, sub_h)
+            
+            # 透過付きcolorをそのまま指定して描画
+            pygame.draw.rect(sub_surface, color, sub_rect, border_radius=radius * scale)
+            
+            aa_surface = pygame.transform.smoothscale(sub_surface, (rect.width, rect.height))
+            self.screen.blit(aa_surface, rect.topleft)
+
+        if blink_on and 0 <= active < len(pages):
+            active_x = x + start_offset_x + active * (actual_page_w + margin)
+            active_rect = pygame.Rect(round(active_x), round(y), round(actual_page_w), self.s.RANGE_GAUGE_MAP_H)
+            border = max(1, self.s.RANGE_GAUGE_MAP_BLINK_BORDER)
+            outer_rect = active_rect.inflate(border * 2, border * 2)
+            outer_radius = min(
+                self.s.RANGE_GAUGE_MAP_PAGE_MAX_RADIUS + border,
+                outer_rect.width // 2,
+                outer_rect.height // 2,
+            )
+
+            sub_w, sub_h = outer_rect.width * scale, outer_rect.height * scale
+            sub_surface = pygame.Surface((sub_w, sub_h), pygame.SRCALPHA)
+            sub_rect = pygame.Rect(0, 0, sub_w, sub_h)
+            pygame.draw.rect(
+                sub_surface,
+                self.s.RANGE_GAUGE_MAP_BLINK_COLOR,
+                sub_rect,
+                width=border * scale,
+                border_radius=outer_radius * scale,
+            )
+            aa_surface = pygame.transform.smoothscale(sub_surface, (outer_rect.width, outer_rect.height))
+            self.screen.blit(aa_surface, outer_rect.topleft)
 
     def get_current_page_i(self):
         return [
@@ -1385,6 +1546,7 @@ class Mid2barPlayerApp:
 
     def draw_background(self):
         self.screen.blit(self.assets.project_back, (0, 0))
+        self.draw_range_gauge_map()
         tools.blit_with_alpha(
             self.screen, self.assets.range_gauge, self.s.RANGE_GAUGE_POS, alpha=0.2
         )

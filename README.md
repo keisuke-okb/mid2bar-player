@@ -99,16 +99,16 @@ Icons and colors used for part markers can be changed in the lyrics settings fil
 The player recognizes blank lines as lyric block separators. For example, the first two lines below are treated as a single block:
 
 ```
-[00:09:65]た[00:09:83]だ[00:10:39]風[00:10:39]([00:10:39]かぜ[00:11:17])[00:11:17]に[00:11:37]揺[00:11:37]([00:11:37]ゆ[00:11:54])[00:11:54]ら[00:11:71]れ[00:11:90]て[00:12:48]
-[00:12:66]何[00:12:66]([00:12:66]なに[00:13:02])[00:13:02]も[00:13:19]考[00:13:19]([00:13:19]かんが[00:14:19])[00:14:19]え[00:14:57]ず[00:14:75]に[00:15:48]
+[00:09:65]た[00:09:83]だ[00:10:39]風[00:11:17]に[00:11:37]揺[00:11:54]ら[00:11:71]れ[00:11:90]て[00:12:48]
+[00:12:66]何[00:13:02]も[00:13:19]考[00:14:19]え[00:14:57]ず[00:14:75]に[00:15:48]
 ```
 
 Three consecutive lines without blank lines are treated as a single block:
 
 ```
-[00:35:29]シャ[00:35:45]イ[00:35:61]ニ[00:35:76]ン[00:35:94]グ[00:36:09]ス[00:36:24]ター[00:36:58]綴[00:36:58]([00:36:58]つづ[00:37:30])[00:37:30]れ[00:37:49]ば[00:37:94]
-[00:38:10]夢[00:38:10]([00:38:10]ゆめ[00:38:46])[00:38:46]に[00:38:66]眠[00:38:66]([00:38:66]ねむ[00:39:22])[00:39:22]る[00:39:64]幻[00:39:64]([00:39:64]まぼろし[00:40:77])[00:40:77]が[00:41:00][00:41:38]掌[00:41:38]([00:41:38]てのひら[00:42:29])[00:42:29]に[00:42:67]降[00:42:67]([00:42:67]ふ[00:43:04])[00:43:04]り[00:43:41]注[00:43:41]([00:43:41]そそ[00:43:96])[00:43:96]ぐ[00:44:44]
-[00:44:56]新[00:44:56]([00:44:56]あら[00:44:91])[00:44:91]た[00:45:29]な[00:45:66]世[00:45:66]([00:45:66]せ[00:46:07])[00:46:07]界[00:46:07]([00:46:07]かい[00:46:63])[00:46:63]へ[00:47:19]
+[00:35:29]シャ[00:35:45]イ[00:35:61]ニ[00:35:76]ン[00:35:94]グ[00:36:09]ス[00:36:24]ター[00:36:58]綴[00:37:30]れ[00:37:49]ば[00:37:94]
+[00:38:10]夢[00:38:46]に[00:38:66]眠[00:39:22]る[00:39:64]幻[00:40:77]が[00:41:00][00:41:38]掌[00:42:29]に[00:42:67]降[00:43:04]り[00:43:41]注[00:43:96]ぐ[00:44:44]
+[00:44:56]新[00:44:91]た[00:45:29]な[00:45:66]世[00:46:07]界[00:46:63]へ[00:47:19]
 ```
 
 For a three-line block, putting a full-width space (U+3000) at the end of the first line (the on-screen B row, counting from the top of the screen (A–D)) aligns B and C on the left and places D on the right. The condition applies when the lyric text between time tags ends with a full-width space, for example (ruby text omitted):
@@ -310,6 +310,24 @@ You can customize images and various settings used by the player:
 | `RANGE_GAUGE_POS` | [1480, 354] | Position of the range gauge [x, y] |
 | `RANGE_GAUGE_W`   | 390         | Range gauge width (px)             |
 | `RANGE_GAUGE_H`   | 23          | Range gauge height (px)            |
+
+### Range gauge map
+
+| Key | Default | Description |
+| --- | --- | --- |
+| `RANGE_GAUGE_MAP_POS` | [1008, 354] | Display position of the range gauge map [x, y] |
+| `RANGE_GAUGE_MAP_W` | 626 | Width of the range gauge map (px) |
+| `RANGE_GAUGE_MAP_H` | 23 | Height of the range gauge map (px) |
+| `RANGE_GAUGE_MAP_PAGE_MAX_RADIUS` | 100 | Maximum corner radius for page icons (px) |
+| `RANGE_GAUGE_MAP_PAGE_MAX_WIDTH` | 30 | Maximum width for page icons to prevent them from becoming overly stretched (px) |
+| `RANGE_GAUGE_MAP_PAGE_MARGIN` | 3 | Margin/spacing between page icons (px) |
+| `RANGE_GAUGE_MAP_PAGE_PAST_ALPHA` | 80 | Opacity for past (already played) pages (0-255) |
+| `RANGE_GAUGE_MAP_BLANK_COLOR` | (100, 100, 100) | Display color for blank pages with no notes [RGB] |
+| `RANGE_GAUGE_MAP_BLANK_S` | 3.0 | Threshold duration without pitch bars to be treated as a blank page (sec) |
+| `RANGE_GAUGE_MAP_BLINK_COLOR` | (200, 200, 200) | Color of the blinking border for the current (active) page [RGB] |
+| `RANGE_GAUGE_MAP_BLINK_ON_S` | 1.0 | Duration of the ON state in the blinking cycle (sec) |
+| `RANGE_GAUGE_MAP_BLINK_OFF_S` | 0.2 | Duration of the OFF state in the blinking cycle (sec) |
+| `RANGE_GAUGE_MAP_BLINK_BORDER` | 5 | Border thickness of the active page blinking outline (px) |
 
 ### Timing
 
