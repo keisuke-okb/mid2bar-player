@@ -33,6 +33,10 @@ A standalone karaoke player that generates karaoke subtitle videos with pitch gu
 * **MID2BAR-Player**: A standalone player that visualizes karaoke by combining melody MIDI data, LRC lyrics (with ruby/furigana support), and optional background video/audio.
 * **Main features**: Synced display of melody MIDI files (with measure/page markers) and lyrics, visual effects (note bars, glow, particles), real-time microphone input scoring (this is FFT-based pitch matching only — not equivalent to commercial karaoke scoring; use for reference), video overlay, and recording (export) functionality.
 
+<div align="center">
+  <img src="./images/ui/screenshot.jpg" alt="Screenshot" width="500" />
+</div>
+
 ---
 
 ## Supported Platforms
