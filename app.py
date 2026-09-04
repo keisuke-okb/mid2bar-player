@@ -438,7 +438,9 @@ class Mid2barPlayerApp:
         # edge sections are replaced so they cannot produce duplicate blanks.
         while self.range_gauge_map_pages and not self.range_gauge_map_pages[0]["notes"]:
             self.range_gauge_map_pages.pop(0)
-        while self.range_gauge_map_pages and not self.range_gauge_map_pages[-1]["notes"]:
+        while (
+            self.range_gauge_map_pages and not self.range_gauge_map_pages[-1]["notes"]
+        ):
             self.range_gauge_map_pages.pop()
         if self.range_gauge_map_pages:
             first_page = self.range_gauge_map_pages[0]
@@ -464,12 +466,19 @@ class Mid2barPlayerApp:
         # The map follows every separator page selected above.
         for idx, page in enumerate(self.range_gauge_map_pages):
             page["fade_in_time"] = max(0, page["start_time"] - self.s.PREVIEW_TIME)
-            if idx and self.range_gauge_map_pages[idx - 1]["end_time"] > page["fade_in_time"]:
+            if (
+                idx
+                and self.range_gauge_map_pages[idx - 1]["end_time"]
+                > page["fade_in_time"]
+            ):
                 page["fade_in_time"] = self.range_gauge_map_pages[idx - 1]["end_time"]
         for idx, page in enumerate(self.range_gauge_map_pages):
             page["fade_out_time"] = page["end_time"] + self.s.REMAIN_TIME
             if idx + 1 < len(self.range_gauge_map_pages):
-                page["fade_out_time"] = min(page["fade_out_time"], self.range_gauge_map_pages[idx + 1]["fade_in_time"])
+                page["fade_out_time"] = min(
+                    page["fade_out_time"],
+                    self.range_gauge_map_pages[idx + 1]["fade_in_time"],
+                )
         for page in self.range_gauge_map_pages:
             page["fade_in_time"] = max(0, page["fade_in_time"] - self.s.FADE_TIME)
 
@@ -495,8 +504,11 @@ class Mid2barPlayerApp:
         margin = max(0, self.s.RANGE_GAUGE_MAP_PAGE_MARGIN)
         page_w = max(1, (self.s.RANGE_GAUGE_MAP_W - margin * (count - 1)) / count)
         active = next(
-            (i for i, p in enumerate(pages)
-            if p["fade_in_time"] <= self.current_time < p["fade_out_time"]),
+            (
+                i
+                for i, p in enumerate(pages)
+                if p["fade_in_time"] <= self.current_time < p["fade_out_time"]
+            ),
             None,
         )
         if active is None:
@@ -540,31 +552,48 @@ class Mid2barPlayerApp:
                     px = 0
                 else:
                     avg = sum(pitches) / len(pitches)
-                    px = round((avg - self.min_pitch) / max(self.pitch_range, 1) * (ref_w - 1))
-                color = ref.get_at((max(0, min(ref_w - 1, px)), ref.get_height() // 2))[:3]
+                    px = round(
+                        (avg - self.min_pitch) / max(self.pitch_range, 1) * (ref_w - 1)
+                    )
+                color = ref.get_at((max(0, min(ref_w - 1, px)), ref.get_height() // 2))[
+                    :3
+                ]
 
             if i < active:
                 color = (*color[:3], self.s.RANGE_GAUGE_MAP_PAGE_PAST_ALPHA)
 
             # actual_page_w と start_offset_x を使用して配置
             rect_x = x + start_offset_x + i * (actual_page_w + margin)
-            rect = pygame.Rect(round(rect_x), round(y), round(actual_page_w), self.s.RANGE_GAUGE_MAP_H)
-            radius = min(self.s.RANGE_GAUGE_MAP_PAGE_MAX_RADIUS, rect.width // 2, rect.height // 2)
+            rect = pygame.Rect(
+                round(rect_x), round(y), round(actual_page_w), self.s.RANGE_GAUGE_MAP_H
+            )
+            radius = min(
+                self.s.RANGE_GAUGE_MAP_PAGE_MAX_RADIUS,
+                rect.width // 2,
+                rect.height // 2,
+            )
 
             # 本体描画
             sub_w, sub_h = rect.width * scale, rect.height * scale
             sub_surface = pygame.Surface((sub_w, sub_h), pygame.SRCALPHA)
             sub_rect = pygame.Rect(0, 0, sub_w, sub_h)
-            
+
             # 透過付きcolorをそのまま指定して描画
             pygame.draw.rect(sub_surface, color, sub_rect, border_radius=radius * scale)
-            
-            aa_surface = pygame.transform.smoothscale(sub_surface, (rect.width, rect.height))
+
+            aa_surface = pygame.transform.smoothscale(
+                sub_surface, (rect.width, rect.height)
+            )
             self.screen.blit(aa_surface, rect.topleft)
 
         if blink_on and 0 <= active < len(pages):
             active_x = x + start_offset_x + active * (actual_page_w + margin)
-            active_rect = pygame.Rect(round(active_x), round(y), round(actual_page_w), self.s.RANGE_GAUGE_MAP_H)
+            active_rect = pygame.Rect(
+                round(active_x),
+                round(y),
+                round(actual_page_w),
+                self.s.RANGE_GAUGE_MAP_H,
+            )
             border = max(1, self.s.RANGE_GAUGE_MAP_BLINK_BORDER)
             outer_rect = active_rect.inflate(border * 2, border * 2)
             outer_radius = min(
@@ -583,7 +612,9 @@ class Mid2barPlayerApp:
                 width=border * scale,
                 border_radius=outer_radius * scale,
             )
-            aa_surface = pygame.transform.smoothscale(sub_surface, (outer_rect.width, outer_rect.height))
+            aa_surface = pygame.transform.smoothscale(
+                sub_surface, (outer_rect.width, outer_rect.height)
+            )
             self.screen.blit(aa_surface, outer_rect.topleft)
 
     def get_current_page_i(self):
